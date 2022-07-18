@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="navigation_bar_color">#C8C6FF</color>
+    <color name="auth_background_color">#E3E3FF</color>
+    <color name="button_color">#6750A4</color>
+    <color name="game_background_color">#E3EAFF</color>
+    <color name="game_navigation_bar_color">#C7D4FF</color>
+    <color name="button_border_color">#79747E</color>
+    <color name="icon_user_color">#EADDFF</color>
 </resources>

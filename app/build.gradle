@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -32,7 +33,7 @@ android {
 }
 
 dependencies {
-
+    implementation 'androidx.legacy:legacy-support-core-utils:1.0.0'
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
@@ -40,14 +41,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'com.arello-mobile:moxy:1.4.5'
-    annotationProcessor 'com.arello-mobile:moxy-compiler:1.4.5'
-    implementation 'com.arello-mobile:moxy-android:1.4.5'
-    implementation 'com.arello-mobile:moxy-app-compat:1.4.5'
-    implementation 'com.google.dagger:dagger-android:2.+'
-    implementation 'com.google.dagger:dagger-android-support:2.+' // if you use the support libraries
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.+'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.+'
+
+    implementation 'tech.schoolhelper:moxy-x:1.7.0'
+    implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'
+    implementation 'tech.schoolhelper:moxy-x-compiler:1.7.0'
+
+    implementation 'com.google.dagger:dagger-android:2.42'
+//    implementation 'com.google.dagger:dagger-android-support:2.+' // if you use the support libraries
+    kapt 'com.google.dagger:dagger-android-processor:2.42'
+    kapt 'com.google.dagger:dagger-compiler:2.42'
     // define a BOM and its version
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
     // define any required OkHttp artifacts without version
@@ -55,4 +57,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'io.realm:realm-android-library:10.5.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.5'
 }
