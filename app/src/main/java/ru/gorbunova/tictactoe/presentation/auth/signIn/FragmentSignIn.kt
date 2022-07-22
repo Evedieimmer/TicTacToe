@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import kotlinx.android.synthetic.main.fragment_sign_in.*
 import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.di.DaggerAppComponent
+import ru.gorbunova.tictactoe.presentation.INavigateRouter
 import javax.inject.Inject
 
 class FragmentSignIn : ABaseFragment(), ISignInView {
@@ -30,16 +32,13 @@ fun providePresenter() = presenter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        btnSignUp.setOnClickListener {
+            activity?.let{
+                if(it is INavigateRouter)
+                    it.showSignUp()
+            }
+        }
     }
-
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_sign_in, container, false)
-//    }
 
     companion object {
 

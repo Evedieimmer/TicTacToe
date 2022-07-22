@@ -9,5 +9,10 @@
     <string name="to_sign_up">Регистрация</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="back">Назад</string>
-
+    <string name="exit">Выйти</string>
+    <string name="game">Играть</string>
+    <string name="game_with_friends">С другом</string>
+    <string name="game_online">Онлайн</string>
+    <string name="game_with_bot">С ботом</string>
+    <string name="rating">Рейтинг</string>
 </resources>

@@ -13,7 +13,6 @@ class AuthActivity : ABaseActivity(), INavigateRouter {
         setContentView(R.layout.activity_auth)
         if (savedInstanceState != null)
             return
-//        replace(FragmentSignIn())
         showSignIn()
     }
 
