@@ -15,4 +15,7 @@
     <string name="game_online">Онлайн</string>
     <string name="game_with_bot">С ботом</string>
     <string name="rating">Рейтинг</string>
+    <string name="settings">Настройки</string>
+    <string name="user_name">Игрок</string>
+    <string name="score">Счет</string>
 </resources>

@@ -1,14 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentGame">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".FragmentMenu"
+    android:orientation="vertical"
+    android:background="@color/game_background_color">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/game_navigation_bar_color"
+            app:title="@string/app_name"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:titleTextColor="@color/button_color" />
+    </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="100dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/userIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_color"
+                android:contentDescription="@string/settings"
+                android:src="@drawable/ic_avatar_placeholder"
+                app:tint="@color/white"  />
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_name"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="30dp">
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/score"
+            android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/scoreNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 | 1"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="30dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/rivalIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_color"
+                android:contentDescription="@string/settings"
+                android:src="@drawable/ic_avatar_placeholder"
+                app:tint="@color/white"  />
+            <TextView
+                android:id="@+id/rivalName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_name"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="95dp"
+        android:layout_width="310dp"
+        android:layout_height="310dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:background="@color/button_color">
+
+        <Button
+            android:id="@+id/btnGame1"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/play_button"
+            app:backgroundTint="@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+
+        <Button
+            android:id="@+id/btnGame2"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/btnGame1"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+
+        <Button
+            android:id="@+id/btnGame3"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/btnGame2"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+
+        <Button
+            android:id="@+id/btnGame4"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/btnGame1"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+
+        <Button
+            android:id="@+id/btnGame5"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/btnGame2"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/btnGame4"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+
+        <Button
+            android:id="@+id/btnGame6"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/btnGame3"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/btnGame5"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+
+        <Button
+            android:id="@+id/btnGame7"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/btnGame4"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+        <Button
+            android:id="@+id/btnGame8"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/btnGame5"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/btnGame7"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_cross"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+        <Button
+            android:id="@+id/btnGame9"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/btnGame6"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/btnGame8"
+            android:background="@drawable/play_button"
+            app:backgroundTint = "@color/game_background_color"
+            app:icon="@drawable/ic_zero"
+            app:iconGravity="textEnd"
+            app:iconSize="40dp"
+            app:iconTint="@color/button_color" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnExit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="83dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/exit"
+        style="?attr/materialButtonOutlinedStyle"/>
+</LinearLayout>

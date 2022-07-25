@@ -16,17 +16,6 @@
         app:titleTextAppearance="@style/TextAppearance.AppCompat.Display1"
         app:titleTextColor="@color/button_color" />
 
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-       android:layout_marginLeft="20dp"
-        android:layout_marginRight="237dp"
-        android:layout_marginTop="65dp"
-        android:text="@string/back"
-        android:pointerIcon="arrow"
-        style="@style/Widget.Material3.Button.Icon"/>
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tfLogin"
         android:layout_width="match_parent"
@@ -89,6 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
         android:layout_marginTop="65dp"
-        android:text="@string/sign_up" />
+        android:text="@string/sign_up"
+        app:backgroundTint="@color/button_color"/>
 
 </LinearLayout>

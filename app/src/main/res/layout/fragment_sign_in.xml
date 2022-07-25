@@ -59,7 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
         android:layout_marginTop="140dp"
-        android:text="@string/sign_in" />
+        android:text="@string/sign_in"
+        app:backgroundTint="@color/button_color"/>
 
     <Button
         android:id="@+id/btnSignUp"
@@ -67,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
         android:layout_marginTop="20dp"
-        android:text="@string/to_sign_up" />
+        android:text="@string/to_sign_up"
+        app:backgroundTint="@color/button_color"/>
 
 </LinearLayout>
