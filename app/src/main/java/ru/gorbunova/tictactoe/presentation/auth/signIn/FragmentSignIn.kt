@@ -1,17 +1,16 @@
 package ru.gorbunova.tictactoe.presentation.auth.signIn
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.di.DaggerAppComponent
-import ru.gorbunova.tictactoe.presentation.INavigateRouter
+import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
+import ru.gorbunova.tictactoe.presentation.main.GameActivity
 import javax.inject.Inject
 
 class FragmentSignIn : ABaseFragment(), ISignInView {
@@ -25,7 +24,6 @@ fun providePresenter() = presenter
 
     override fun inject() {
         DaggerAppComponent.create().inject(this)
-        //toast("Message")
     }
 
     override fun getViewId() = R.layout.fragment_sign_in
@@ -37,6 +35,12 @@ fun providePresenter() = presenter
                 if(it is INavigateRouter)
                     it.showSignUp()
             }
+        }
+
+        btnSignIn.setOnClickListener {
+//            val intent = Intent(this, GameActivity::class.java)
+//            startActivity(intent)
+
         }
     }
 

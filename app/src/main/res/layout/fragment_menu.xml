@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp">
+            android:layout_marginLeft="40dp">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/userIcon"
@@ -53,18 +53,18 @@
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="180dp"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="270dp"
             android:backgroundTint="@color/button_color"
             android:contentDescription="@string/settings"
             android:src="@drawable/ic_settings"
-            app:tint="@color/white"  />
+            app:tint="@color/white" />
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="110dp"
+        android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:text="@string/game"
         android:textAppearance="@style/TextAppearance.Material3.DisplayLarge"
@@ -112,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="100dp"
         android:text="@string/exit"
         style="?attr/materialButtonOutlinedStyle"/>
 

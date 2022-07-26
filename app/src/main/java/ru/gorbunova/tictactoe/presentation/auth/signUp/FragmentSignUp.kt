@@ -1,16 +1,11 @@
 package ru.gorbunova.tictactoe.presentation.auth.signUp
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import kotlinx.android.synthetic.main.fragment_sign_up.*
 import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.di.DaggerAppComponent
-import ru.gorbunova.tictactoe.presentation.INavigateRouter
 import javax.inject.Inject
 
 class FragmentSignUp : ABaseFragment(), ISignUpView {
