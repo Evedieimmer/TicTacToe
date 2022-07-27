@@ -1,4 +1,6 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
-interface IGameView {
+import com.arellomobile.mvp.MvpView
+
+interface IGameView: MvpView {
 }

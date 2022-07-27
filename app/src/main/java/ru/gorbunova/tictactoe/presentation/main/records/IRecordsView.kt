@@ -1,4 +1,6 @@
 package ru.gorbunova.tictactoe.presentation.main.records
 
-interface IRecordsView {
+import com.arellomobile.mvp.MvpView
+
+interface IRecordsView: MvpView {
 }

@@ -1,4 +1,6 @@
 package ru.gorbunova.tictactoe.presentation.main.menu
 
-interface IMenuView {
+import com.arellomobile.mvp.MvpView
+
+interface IMenuView : MvpView{
 }
