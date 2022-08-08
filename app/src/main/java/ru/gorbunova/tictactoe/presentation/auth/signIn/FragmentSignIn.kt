@@ -1,6 +1,5 @@
 package ru.gorbunova.tictactoe.presentation.auth.signIn
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -10,7 +9,6 @@ import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.di.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
-import ru.gorbunova.tictactoe.presentation.main.GameActivity
 import javax.inject.Inject
 
 class FragmentSignIn : ABaseFragment(), ISignInView {
@@ -38,9 +36,10 @@ fun providePresenter() = presenter
         }
 
         btnSignIn.setOnClickListener {
-//            val intent = Intent(this, GameActivity::class.java)
-//            startActivity(intent)
-
+            activity?.let {
+                if(it is INavigateRouter)
+                    it.goToMenuScreen()
+            }
         }
     }
 
