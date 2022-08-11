@@ -1,4 +1,8 @@
 package ru.gorbunova.tictactoe.domain.repositories.models.realm
 
-class TokenRealm {
+import io.realm.RealmObject
+
+class TokenRealm: RealmObject() {
+    var access: String? = null
+    var refresh: String? = null
 }

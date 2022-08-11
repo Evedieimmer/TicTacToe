@@ -12,7 +12,7 @@ init {inject()}
 
     abstract fun inject()
 
-    fun toast(message: String) {
+    fun toast(message: Int) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
     abstract fun getViewId():Int

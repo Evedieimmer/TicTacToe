@@ -10,7 +10,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.databinding.FragmentGameBinding
-import ru.gorbunova.tictactoe.di.DaggerAppComponent
+import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import javax.inject.Inject
 
 

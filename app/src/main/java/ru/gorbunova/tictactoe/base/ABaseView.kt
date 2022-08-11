@@ -1,5 +1,7 @@
 package ru.gorbunova.tictactoe.base
 
-abstract class ABaseView {
+import com.arellomobile.mvp.MvpView
+
+abstract class ABaseView : MvpView{
 
 }

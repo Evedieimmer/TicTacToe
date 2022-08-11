@@ -26,4 +26,9 @@ class AuthActivity : ABaseActivity(), INavigateRouter {
     override fun showSignIn() {
         replace(FragmentSignIn())
     }
+
+    override fun goToMenuScreen() {
+        val intent = Intent(this, GameActivity::class.java)
+        startActivity(intent)
+    }
 }

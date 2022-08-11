@@ -10,7 +10,8 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_menu.*
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.base.ABaseFragment
-import ru.gorbunova.tictactoe.di.DaggerAppComponent
+import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
+
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import javax.inject.Inject
 

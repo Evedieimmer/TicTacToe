@@ -10,7 +10,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.base.ABaseFragment
-import ru.gorbunova.tictactoe.di.DaggerAppComponent
+import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
 import javax.inject.Inject
 

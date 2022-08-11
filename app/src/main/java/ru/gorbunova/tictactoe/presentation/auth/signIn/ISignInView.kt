@@ -1,7 +1,8 @@
 package ru.gorbunova.tictactoe.presentation.auth.signIn
 
-import com.arellomobile.mvp.MvpView
+import ru.gorbunova.tictactoe.base.IBaseView
 
-interface ISignInView : MvpView{
-
+interface ISignInView : IBaseView{
+    fun showError(message: String?)
+    fun goToMenu()
 }
