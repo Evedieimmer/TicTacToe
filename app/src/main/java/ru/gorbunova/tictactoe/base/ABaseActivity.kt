@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment
 import ru.gorbunova.tictactoe.R
 
 abstract class ABaseActivity : AppCompatActivity() {
-    fun replace (fragment: Fragment, backStack: String? = null, tag: String? = null){
+    fun replace(fragment: Fragment, backStack: String? = null, tag: String? = null) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment,tag).apply {
-                backStack?.let{addToBackStack(it)}
+            .replace(R.id.container, fragment, tag).apply {
+                backStack?.let { addToBackStack(it) }
             }
             .commit()
     }

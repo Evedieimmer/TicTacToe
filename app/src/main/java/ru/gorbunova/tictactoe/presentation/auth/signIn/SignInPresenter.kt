@@ -3,7 +3,7 @@ package ru.gorbunova.tictactoe.presentation.auth.signIn
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import ru.gorbunova.tictactoe.base.SubRX
-import ru.gorbunova.tictactoe.domain.repositories.AuthRepository
+import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import javax.inject.Inject
 
 @InjectViewState
@@ -15,7 +15,7 @@ class SignInPresenter : MvpPresenter<ISignInView> {
     }
 
     @Inject
-    lateinit var userRepository: AuthRepository
+    lateinit var userRepository: UserRepository
 
     fun auth(login: String, password: String) {
         userRepository.login(SubRX { _, e ->

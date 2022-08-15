@@ -5,19 +5,24 @@ import ru.gorbunova.tictactoe.domain.repositories.models.realm.UserRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 
-fun Token?.toRealm(): TokenRealm?{
+fun Token?.toRealm(): TokenRealm? {
     this ?: return null
 
-    return TokenRealm().let{
+    return TokenRealm().let {
         it.access = access
         it.refresh = refresh
         it
     }
 }
 
-fun User?.toRealm(): UserRealm?{
+fun TokenRealm?.toBase(): Token? {
     this ?: return null
-    return UserRealm().let{
+    return Token(access ?: "", refresh ?: "")
+}
+
+fun User?.toRealm(): UserRealm? {
+    this ?: return null
+    return UserRealm().let {
         it.id = id ?: 0
         it.login = login
         it.password = password
@@ -25,4 +30,9 @@ fun User?.toRealm(): UserRealm?{
         it.token = token.toRealm()
         it
     }
+}
+
+fun UserRealm?.toBase(): User?{
+    this ?: return null
+    return User(login ?: "", password ?: "", id, avatarUrl, token.toBase())
 }

@@ -5,7 +5,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 
-class SubRX<T>: Observer<T>, Disposable {
+class SubRX<T> : Observer<T>, Disposable {
 
     private var iComplete: () -> Unit = {}
     private var iError: (Throwable) -> Unit = {}
@@ -18,7 +18,7 @@ class SubRX<T>: Observer<T>, Disposable {
 
     private val composite: CompositeDisposable = CompositeDisposable()
 
-    constructor() { }
+    constructor() {}
 
     constructor(iFinally: (T?, Throwable?) -> Unit) {
         this.iFinally = iFinally

@@ -16,7 +16,7 @@ import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import javax.inject.Inject
 
 
-class FragmentMenu: ABaseFragment(), IMenuView {
+class FragmentMenu : ABaseFragment(), IMenuView {
 
     @Inject
     @InjectPresenter
@@ -35,15 +35,15 @@ class FragmentMenu: ABaseFragment(), IMenuView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         btnWithFriend.setOnClickListener {
-            activity?.let{
-                if(it is INavigateRouterMain)
+            activity?.let {
+                if (it is INavigateRouterMain)
                     it.showGame()
             }
         }
 
-        btnRating.setOnClickListener{
-            activity?.let{
-                if(it is INavigateRouterMain)
+        btnRating.setOnClickListener {
+            activity?.let {
+                if (it is INavigateRouterMain)
                     it.showRecords()
             }
         }

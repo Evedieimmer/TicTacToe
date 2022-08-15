@@ -8,7 +8,7 @@ import com.arellomobile.mvp.MvpPresenter
 import ru.gorbunova.tictactoe.R
 import javax.inject.Inject
 
-class GamePresenter : MvpPresenter<IGameView>{
+class GamePresenter : MvpPresenter<IGameView> {
     @Inject
     constructor()
 
@@ -17,33 +17,32 @@ class GamePresenter : MvpPresenter<IGameView>{
     private val mCurrentMove = MutableLiveData<CellState>()
     val currentMove: LiveData<CellState> = mCurrentMove
 
-    init{
+    init {
         initGame()
     }
 
-    private fun initGame(){
-        gameMatrix = Array<CellState>(9){CellState.None}
+    private fun initGame() {
+        gameMatrix = Array<CellState>(9) { CellState.None }
         currentCellState = CellState.Cross
         mCurrentMove.value = currentCellState
 
     }
 
-    fun onReloadClick(){
+    fun onReloadClick() {
         initGame()
     }
 
-    fun onCellClick(index: Int){
+    fun onCellClick(index: Int) {
         gameMatrix[index] = currentCellState
 
-        currentCellState = if(currentCellState == CellState.Cross)CellState.Zero
+        currentCellState = if (currentCellState == CellState.Cross) CellState.Zero
         else CellState.Cross
         mCurrentMove.value = currentCellState
     }
 
-    enum class CellState(@DrawableRes val icon: Int, val isClickable: Boolean)
-    {
+    enum class CellState(@DrawableRes val icon: Int, val isClickable: Boolean) {
         None(0, true),
         Cross(R.drawable.ic_cross, false),
-        Zero(R.drawable.ic_zero,false)
+        Zero(R.drawable.ic_zero, false)
     }
 }

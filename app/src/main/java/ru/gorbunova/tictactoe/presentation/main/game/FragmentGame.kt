@@ -36,7 +36,7 @@ class FragmentGame : ABaseFragment(), IGameView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentGameBinding.inflate(inflater,container,false)
+        binding = FragmentGameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -44,6 +44,7 @@ class FragmentGame : ABaseFragment(), IGameView {
         super.onViewCreated(view, savedInstanceState)
 
     }
+
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
