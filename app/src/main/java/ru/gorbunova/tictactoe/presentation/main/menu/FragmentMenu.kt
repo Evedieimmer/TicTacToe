@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_menu.*
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
+import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
 
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import javax.inject.Inject
@@ -47,6 +48,12 @@ class FragmentMenu : ABaseFragment(), IMenuView {
                     it.showRecords()
             }
         }
+
+        btnExit.setOnClickListener {
+            activity?.let{
+                presenter.logOut()
+            }
+        }
     }
 
     companion object {
@@ -54,5 +61,9 @@ class FragmentMenu : ABaseFragment(), IMenuView {
         fun newInstance(param1: String, param2: String) =
             FragmentMenu().apply {
             }
+    }
+
+    override fun goToAuthScreen() {
+        (activity as? INavigateRouterMain)?.goToAuthScreen()
     }
 }

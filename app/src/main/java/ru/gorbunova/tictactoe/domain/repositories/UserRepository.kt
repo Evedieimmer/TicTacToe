@@ -4,6 +4,7 @@ import android.os.SystemClock
 import ru.gorbunova.tictactoe.base.SubRX
 import ru.gorbunova.tictactoe.base.standardSubscribeIO
 import ru.gorbunova.tictactoe.domain.repositories.local.UserStorage
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.Response
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.api.UserRestApi
@@ -53,9 +54,13 @@ class UserRepository {
     }
     fun getToken() = storage.getToken()
 
-//    fun logOut(accessToken: String): Token? {
-//        rest.logOut(accessToken)
-//    }
-
+    fun logOut(observer: SubRX<Response>) {
+        getToken()?.access?.let {
+            rest.logOut(it).doOnNext { response ->
+                if (response.success)
+                    storage.clearUserData()
+            }.doOnError {  }.standardSubscribeIO(observer)
+        }
+    }
 
 }

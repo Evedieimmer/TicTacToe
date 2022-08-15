@@ -1,6 +1,7 @@
 package ru.gorbunova.tictactoe.domain.repositories.local
 
 import io.realm.Realm
+import io.realm.kotlin.delete
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.TokenRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.UserRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
@@ -22,7 +23,7 @@ class UserStorage {
         if (_user.token != null){
             val user = this.user ?: return
             user.login = _user.login
-            user.password = _user.password
+            user.password = pass
             user.token = _user.token
         }
 
@@ -60,4 +61,16 @@ class UserStorage {
             return it.where(TokenRealm::class.java).findFirst()?.toBase().apply { token = this }
         }
     }
+
+    fun clearUserData() {
+        Realm.getDefaultInstance().use {
+            it.delete(UserRealm::class.java)
+            it.delete(TokenRealm::class.java)
+        }
+    }
+
+//    let realm = try! Realm()
+//    try! realm.write {
+//        realm.deleteAll()
+//    }
 }

@@ -1,5 +1,6 @@
 package ru.gorbunova.tictactoe.domain.repositories.models.rest.service
 
+
 import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.http.*
@@ -25,7 +26,7 @@ interface IUserRestApiService {
 
     //Разавторизовать текущего пользователя
     @DELETE("user/v1/logout")
-    fun logOut(@Header("access_token") accessToken: String): Call<Response>
+    fun logOut(@Header("access_token") accessToken: String): Observable<Response>
 
     //Обновление данных пользователя: установка аватара и смена пароля
     @POST("user/v1/update")

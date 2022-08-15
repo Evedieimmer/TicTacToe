@@ -8,9 +8,10 @@ import io.realm.RealmConfiguration
 class App: Application(){
     companion object {
         lateinit var appContext: Context
+        private const val realmVersion = 1L //число в long-формате
     }
 
-     fun OnCreate(){
+    override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
         initRealm()
@@ -19,6 +20,7 @@ class App: Application(){
     private fun initRealm(){
         Realm.init(this)
         Realm.setDefaultConfiguration(RealmConfiguration.Builder()
+            .schemaVersion(realmVersion)
             .deleteRealmIfMigrationNeeded()
             .build())
     }

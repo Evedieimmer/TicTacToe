@@ -8,6 +8,7 @@ import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.base.ABaseActivity
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
+import ru.gorbunova.tictactoe.presentation.auth.AuthActivity
 import ru.gorbunova.tictactoe.presentation.main.game.FragmentGame
 import ru.gorbunova.tictactoe.presentation.main.menu.FragmentMenu
 import ru.gorbunova.tictactoe.presentation.main.records.FragmentRecordsTable
@@ -54,5 +55,10 @@ class GameActivity : ABaseActivity(), INavigateRouterMain {
 
     override fun showRecords() {
         replace(FragmentRecordsTable(), "Records")
+    }
+
+    override fun goToAuthScreen() {
+        val intent = Intent(this, AuthActivity::class.java)
+        startActivity(intent)
     }
 }
