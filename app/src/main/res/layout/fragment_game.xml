@@ -151,7 +151,7 @@
             android:layout_below="@+id/btnGame1"
             android:layout_marginTop="5dp"
             android:background="@drawable/play_button"
-            app:backgroundTint = "@color/game_background_color"
+            app:backgroundTint="@color/game_background_color"
             app:icon="@drawable/ic_cross"
             app:iconGravity="textEnd"
             app:iconSize="40dp"
@@ -235,7 +235,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/btnExit"
+        android:id="@+id/btnQuitTheGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"

@@ -30,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/login"
-            android:text="@string/login"
             android:textColorHint = "@color/button_color"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -48,13 +47,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/pass"
-            android:text="@string/pass"
             android:textColorHint = "@color/button_color"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tfPasswordRepeat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -64,10 +61,10 @@
         app:endIconMode="password_toggle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPasswordRepeat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/pass_repeat"
-            android:text="@string/pass"
             android:textColorHint = "@color/button_color"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>

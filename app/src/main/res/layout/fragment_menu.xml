@@ -108,7 +108,7 @@
         android:backgroundTint="@color/button_color"/>
 
     <Button
-        android:id="@+id/btnExit"
+        android:id="@+id/btnQuitTheGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"

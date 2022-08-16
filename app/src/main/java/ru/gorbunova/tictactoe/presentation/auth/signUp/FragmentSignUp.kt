@@ -34,7 +34,12 @@ class FragmentSignUp : ABaseFragment(), ISignUpView {
         btnSignUp.setOnClickListener {
             val login = "${etNewLogin.text}"
             val password = "${etNewPassword.text}"
+            val passwordRepeat = "${etPasswordRepeat.text}"
 
+            if (password != passwordRepeat) {
+                toast(R.string.passwords_do_not_match)
+                return@setOnClickListener
+            }
             if (login.isEmpty() || password.isEmpty()) {
                 toast(R.string.error_login_password)
                 return@setOnClickListener

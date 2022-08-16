@@ -8,9 +8,7 @@ import com.arellomobile.mvp.MvpPresenter
 import ru.gorbunova.tictactoe.R
 import javax.inject.Inject
 
-class GamePresenter : MvpPresenter<IGameView> {
-    @Inject
-    constructor()
+class GamePresenter @Inject constructor() : MvpPresenter<IGameView>() {
 
     private lateinit var gameMatrix: Array<CellState>
     private lateinit var currentCellState: CellState
@@ -45,4 +43,5 @@ class GamePresenter : MvpPresenter<IGameView> {
         Cross(R.drawable.ic_cross, false),
         Zero(R.drawable.ic_zero, false)
     }
+
 }

@@ -1,20 +1,13 @@
 package ru.gorbunova.tictactoe.presentation.main.menu
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_menu.*
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
-import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
 
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import javax.inject.Inject
@@ -54,18 +47,11 @@ class FragmentMenu : ABaseFragment(), IMenuView {
             }
         }
 
-        btnExit.setOnClickListener {
+        btnQuitTheGame.setOnClickListener {
             activity?.let{
                 presenter.logOut()
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentMenu().apply {
-            }
     }
 
     override fun goToAuthScreen() {
