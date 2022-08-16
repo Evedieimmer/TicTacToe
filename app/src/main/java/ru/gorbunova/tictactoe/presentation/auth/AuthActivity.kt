@@ -1,11 +1,12 @@
 package ru.gorbunova.tictactoe.presentation.auth
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.base.ABaseActivity
 import ru.gorbunova.tictactoe.R
+import ru.gorbunova.tictactoe.presentation.auth.load.FragmentLoad
 import ru.gorbunova.tictactoe.presentation.auth.signIn.FragmentSignIn
 import ru.gorbunova.tictactoe.presentation.auth.signUp.FragmentSignUp
 import ru.gorbunova.tictactoe.presentation.main.GameActivity
@@ -27,7 +28,7 @@ class AuthActivity : ABaseActivity(), INavigateRouter {
         setContentView(R.layout.activity_auth)
         if (savedInstanceState != null)
             return
-        showSignIn()
+         showLoad()
     }
 
     override fun showSignUp() {
@@ -39,7 +40,12 @@ class AuthActivity : ABaseActivity(), INavigateRouter {
     }
 
     override fun goToMenuScreen() {
-        val intent = Intent(this, GameActivity::class.java)
-        startActivity(intent)
+        GameActivity.show()
+//        val intent = Intent(this, GameActivity::class.java)
+//        startActivity(intent)
+    }
+
+    override fun showLoad() {
+        replace(FragmentLoad())
     }
 }

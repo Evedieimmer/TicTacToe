@@ -3,6 +3,7 @@ package ru.gorbunova.tictactoe.presentation.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.base.ABaseActivity
@@ -16,8 +17,8 @@ import javax.inject.Inject
 
 class GameActivity : ABaseActivity(), INavigateRouterMain {
 
-    companion object{
-        fun show(){
+    companion object {
+        fun show() {
             App.appContext.let {
                 it.startActivity(Intent(it, GameActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -29,11 +30,17 @@ class GameActivity : ABaseActivity(), INavigateRouterMain {
     @Inject
     lateinit var userRepository: UserRepository
 
+    //    private var gameFragment: FragmentGame = FragmentGame()
+//    private var gameFragment1 = FragmentGame()
+    private val gameFragment: FragmentGame by lazy { FragmentGame() }
+    private val menuFragment: FragmentMenu by lazy { FragmentMenu() }
+    private val recordFragment: FragmentRecordsTable by lazy { FragmentRecordsTable() }
+
     init {
         inject()
     }
 
-    fun inject(){
+    fun inject() {
         DaggerAppComponent.create().inject(this)
     }
 
@@ -46,19 +53,20 @@ class GameActivity : ABaseActivity(), INavigateRouterMain {
     }
 
     override fun showGame() {
-        replace(FragmentGame(), "Game")
+        replace(gameFragment, "Game")
     }
 
     override fun showMenu() {
-        replace(FragmentMenu())
+        replace(menuFragment)
     }
 
     override fun showRecords() {
-        replace(FragmentRecordsTable(), "Records")
+        replace(recordFragment, "Records")
     }
 
     override fun goToAuthScreen() {
-        val intent = Intent(this, AuthActivity::class.java)
-        startActivity(intent)
+        AuthActivity.show()
+//        val intent = Intent(this, AuthActivity::class.java)
+//        startActivity(intent)
     }
 }

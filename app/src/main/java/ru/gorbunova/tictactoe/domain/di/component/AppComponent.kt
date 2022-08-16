@@ -3,6 +3,7 @@ package ru.gorbunova.tictactoe.domain.di.component
 
 import dagger.Component
 import ru.gorbunova.tictactoe.domain.di.module.NetModule
+import ru.gorbunova.tictactoe.presentation.auth.load.FragmentLoad
 import ru.gorbunova.tictactoe.presentation.auth.signIn.FragmentSignIn
 import ru.gorbunova.tictactoe.presentation.auth.signUp.FragmentSignUp
 import ru.gorbunova.tictactoe.presentation.main.GameActivity
@@ -25,4 +26,5 @@ interface AppComponent {
     fun inject(target: FragmentGame)
     fun inject(target: FragmentRecordsTable)
     fun inject(target: GameActivity)
+    fun inject(target: FragmentLoad)
 }

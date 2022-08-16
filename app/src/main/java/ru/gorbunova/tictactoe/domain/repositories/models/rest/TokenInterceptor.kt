@@ -33,6 +33,7 @@ class TokenInterceptor : Interceptor {
         var token = userRepository.getToken()
         if (token == null) {
             AuthActivity.show()
+            AuthActivity()
             throw AuthException("Auth is NULL")
         }
 

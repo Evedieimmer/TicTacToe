@@ -6,4 +6,5 @@ interface INavigateRouter {
     fun showSignUp()
     fun showSignIn()
     fun goToMenuScreen()
+    fun showLoad()
 }

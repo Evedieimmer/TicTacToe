@@ -1,7 +1,6 @@
 package ru.gorbunova.tictactoe.domain.repositories.local
 
 import io.realm.Realm
-import io.realm.kotlin.delete
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.TokenRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.UserRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
@@ -63,14 +62,11 @@ class UserStorage {
     }
 
     fun clearUserData() {
-        Realm.getDefaultInstance().use {
-            it.delete(UserRealm::class.java)
-            it.delete(TokenRealm::class.java)
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction {
+                it.delete(UserRealm::class.java)
+                it.delete(TokenRealm::class.java)
+            }
         }
     }
-
-//    let realm = try! Realm()
-//    try! realm.write {
-//        realm.deleteAll()
-//    }
 }

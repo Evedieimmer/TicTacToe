@@ -54,6 +54,8 @@ class UserRepository {
     }
     fun getToken() = storage.getToken()
 
+    fun hasToken() = storage.getToken() != null
+
     fun logOut(observer: SubRX<Response>) {
         getToken()?.access?.let {
             rest.logOut(it).doOnNext { response ->
