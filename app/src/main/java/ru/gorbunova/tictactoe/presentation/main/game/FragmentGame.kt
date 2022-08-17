@@ -36,7 +36,7 @@ class FragmentGame : ABaseFragment(), IGameView {
 
     override fun getViewId() = R.layout.fragment_game
 
-    override fun onCreated(savedInstanceState: Bundle?) {
+     fun onCreated(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentGameBinding.inflate(layoutInflater)
         initBoard()

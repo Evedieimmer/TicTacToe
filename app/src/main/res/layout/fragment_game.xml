@@ -33,20 +33,19 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="100dp">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/userIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_color"
-                android:contentDescription="@string/settings"
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/shape"
                 android:src="@drawable/ic_avatar_placeholder"
-                app:tint="@color/white"  />
+                app:tint="@color/white" />
             <TextView
+                android:layout_gravity="center"
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user_name"
-                android:layout_gravity="center"/>
+                android:text="@string/user_name" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,20 +75,19 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="30dp">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/rivalIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/button_color"
-                android:contentDescription="@string/settings"
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/shape"
                 android:src="@drawable/ic_avatar_placeholder"
-                app:tint="@color/white"  />
+                app:tint="@color/white" />
             <TextView
-                android:id="@+id/rivalName"
+                android:layout_gravity="center"
+                android:id="@+id/userName2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user_name"
-                android:layout_gravity="center"/>
+                android:text="@string/user_name" />
         </LinearLayout>
 
     </LinearLayout>
