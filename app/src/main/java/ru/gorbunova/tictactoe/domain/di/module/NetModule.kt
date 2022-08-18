@@ -7,10 +7,10 @@ import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import ru.gorbunova.tictactoe.base.IRestClient
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.RestClient
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.TokenInterceptor
+import soft.eac.appmvptemplate.common.net.IRestClient
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton

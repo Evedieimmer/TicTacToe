@@ -1,8 +1,11 @@
 package ru.gorbunova.tictactoe.presentation.auth.signIn
 
-import ru.gorbunova.tictactoe.base.IBaseView
+import moxy.MvpView
+import moxy.viewstate.strategy.SkipStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
-interface ISignInView : IBaseView {
-    fun showError(message: String?)
+@StateStrategyType(SkipStrategy::class)
+interface ISignInView : MvpView {
+    fun showError(message: String)
     fun goToMenu()
 }

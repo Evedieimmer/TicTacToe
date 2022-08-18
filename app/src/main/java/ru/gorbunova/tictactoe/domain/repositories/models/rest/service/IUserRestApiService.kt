@@ -1,7 +1,8 @@
 package ru.gorbunova.tictactoe.domain.repositories.models.rest.service
 
 
-import io.reactivex.Observable
+
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
 import retrofit2.http.*
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.*

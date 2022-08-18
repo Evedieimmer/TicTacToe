@@ -8,4 +8,5 @@ interface IPlayer {
     fun ready()
     fun exitGame()
     fun render()
+    fun getActionType(): Int
 }

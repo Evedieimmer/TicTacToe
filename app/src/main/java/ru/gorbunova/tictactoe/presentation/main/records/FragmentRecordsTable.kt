@@ -2,16 +2,16 @@ package ru.gorbunova.tictactoe.presentation.main.records
 
 import android.os.Bundle
 import android.view.View
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_game.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
-import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
+import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
-class FragmentRecordsTable : ABaseFragment(), IRecordsView {
+class FragmentRecordsTable : ABaseFragment(R.layout.fragment_records_table), IRecordsView {
 
     @Inject
     @InjectPresenter
@@ -24,7 +24,7 @@ class FragmentRecordsTable : ABaseFragment(), IRecordsView {
         DaggerAppComponent.create().inject(this)
     }
 
-    override fun getViewId() = R.layout.fragment_records_table
+//     fun getViewId() = R.layout.fragment_records_table
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

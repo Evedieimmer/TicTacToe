@@ -3,17 +3,17 @@ package ru.gorbunova.tictactoe.presentation.auth.signUp
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 import kotlinx.android.synthetic.main.fragment_sign_up.btnSignUp
-import ru.gorbunova.tictactoe.base.ABaseFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
+import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
-class FragmentSignUp : ABaseFragment(), ISignUpView {
+class FragmentSignUp : ABaseFragment(R.layout.fragment_sign_up), ISignUpView {
 
     @Inject
     @InjectPresenter
@@ -26,7 +26,7 @@ class FragmentSignUp : ABaseFragment(), ISignUpView {
         DaggerAppComponent.create().inject(this)
     }
 
-    override fun getViewId() = R.layout.fragment_sign_up
+//     fun getViewId() = R.layout.fragment_sign_up
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,7 +48,7 @@ class FragmentSignUp : ABaseFragment(), ISignUpView {
         }
     }
 
-    override fun showError(message: String?) {
+    override fun showError(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 

@@ -1,24 +1,20 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.IconCompat
-import androidx.lifecycle.LifecycleOwner
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_game.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
-import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.databinding.FragmentGameBinding
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
+import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
 
-class FragmentGame : ABaseFragment(), IGameView {
+class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
 
     private lateinit var binding: FragmentGameBinding
     private var boardList = mutableListOf<Button>()
@@ -34,19 +30,24 @@ class FragmentGame : ABaseFragment(), IGameView {
         DaggerAppComponent.create().inject(this)
     }
 
-    override fun getViewId() = R.layout.fragment_game
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-     fun onCreated(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = FragmentGameBinding.inflate(layoutInflater)
-        initBoard()
+    }
 
-        btnQuitTheGame.setOnClickListener{
-            activity.let {
-                if(it is INavigateRouterMain)
-                    it.showMenu()
-            }
-        }
+//     fun onCreated(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//
+//        binding = FragmentGameBinding.inflate(layoutInflater)
+//        initBoard()
+//
+//        btnQuitTheGame.setOnClickListener{
+//            activity.let {
+//                if(it is INavigateRouterMain)
+//                    it.showMenu()
+//            }
+//        }
     }
 
     private fun initBoard()

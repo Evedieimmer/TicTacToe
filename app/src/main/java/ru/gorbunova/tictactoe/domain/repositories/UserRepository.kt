@@ -1,13 +1,14 @@
 package ru.gorbunova.tictactoe.domain.repositories
 
 import android.os.SystemClock
-import ru.gorbunova.tictactoe.base.SubRX
-import ru.gorbunova.tictactoe.base.standardSubscribeIO
+
 import ru.gorbunova.tictactoe.domain.repositories.local.UserStorage
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Response
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.api.UserRestApi
+import soft.eac.appmvptemplate.common.rx.SubRX
+import soft.eac.appmvptemplate.common.rx.standardIO
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -25,14 +26,14 @@ class UserRepository {
 
         rest.login(login, pass).doOnNext {
             storage.save(it, login, pass)
-        }.doOnError { }.standardSubscribeIO(observer)
+        }.standardIO(observer)
     }
 
     fun registration(observer: SubRX<User>, login: String, pass: String) {
 
         rest.registration(login, pass).doOnNext {
             storage.save(it, login, pass)
-        }.doOnError { }.standardSubscribeIO(observer)
+        }.doOnError { }.standardIO(observer)
     }
 
     fun refreshToken(
@@ -61,7 +62,7 @@ class UserRepository {
             rest.logOut(it).doOnNext { response ->
                 if (response.success)
                     storage.clearUserData()
-            }.doOnError {  }.standardSubscribeIO(observer)
+            }.doOnError {  }.standardIO(observer)
         }
     }
 

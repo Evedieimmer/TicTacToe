@@ -1,18 +1,15 @@
 package ru.gorbunova.tictactoe.presentation.auth.load
 
-
-import android.os.Handler
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.InjectViewState
 import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
+import soft.eac.appmvptemplate.tools.ABasePresenter
 import javax.inject.Inject
 
 @InjectViewState
-class LoadPresenter @Inject constructor() : MvpPresenter<ILoadView>() {
-
-    @Inject
-    lateinit var userRepository: UserRepository
+class LoadPresenter @Inject constructor(
+    private var userRepository: UserRepository
+) : ABasePresenter<ILoadView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -21,7 +18,7 @@ class LoadPresenter @Inject constructor() : MvpPresenter<ILoadView>() {
         }, 500)
     }
 
-    fun loadStaticResources() {
+    private fun loadStaticResources() {
         if (userRepository.hasToken())
             viewState.onLoadingCompleteLogging()
         else

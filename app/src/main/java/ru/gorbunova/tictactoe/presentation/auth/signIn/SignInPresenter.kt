@@ -1,13 +1,14 @@
 package ru.gorbunova.tictactoe.presentation.auth.signIn
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import ru.gorbunova.tictactoe.base.SubRX
+
+import moxy.InjectViewState
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
+import soft.eac.appmvptemplate.common.rx.SubRX
+import soft.eac.appmvptemplate.tools.ABasePresenter
 import javax.inject.Inject
 
 @InjectViewState
-class SignInPresenter : MvpPresenter<ISignInView> {
+class SignInPresenter : ABasePresenter<ISignInView> {
 
     @Inject
     constructor(/*userRepository: AuthRepository*/) {

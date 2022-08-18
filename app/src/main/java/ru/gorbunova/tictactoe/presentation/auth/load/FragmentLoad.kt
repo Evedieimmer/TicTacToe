@@ -1,14 +1,15 @@
 package ru.gorbunova.tictactoe.presentation.auth.load
 
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
-import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
+import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
-class FragmentLoad : ABaseFragment(), ILoadView{
+class FragmentLoad : ABaseFragment(R.layout.fragment_load), ILoadView{
 
     @Inject
     @InjectPresenter
@@ -19,9 +20,8 @@ class FragmentLoad : ABaseFragment(), ILoadView{
 
     override fun inject() {
         DaggerAppComponent.create().inject(this)
+        println()
     }
-
-    override fun getViewId() = R.layout.fragment_load
 
     override fun onLoadingComplete() {
         activity.let {

@@ -92,8 +92,18 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/whoTurn"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/who_turn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/button_color"/>
+
     <RelativeLayout
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="20dp"
         android:layout_width="310dp"
         android:layout_height="310dp"
         android:layout_gravity="center"

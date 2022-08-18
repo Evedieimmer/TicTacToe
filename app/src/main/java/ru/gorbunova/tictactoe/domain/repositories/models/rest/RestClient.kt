@@ -1,18 +1,18 @@
 package ru.gorbunova.tictactoe.domain.repositories.models.rest
 
 import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.gorbunova.tictactoe.base.IRestClient
+import soft.eac.appmvptemplate.common.net.IRestClient
 
 class RestClient(private val client: OkHttpClient, gson: Gson, baseUrl: String) : IRestClient {
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .client(client)
         .build()
 

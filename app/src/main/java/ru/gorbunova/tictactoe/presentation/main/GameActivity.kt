@@ -1,21 +1,19 @@
 package ru.gorbunova.tictactoe.presentation.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.R
-import ru.gorbunova.tictactoe.base.ABaseActivity
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import ru.gorbunova.tictactoe.presentation.auth.AuthActivity
 import ru.gorbunova.tictactoe.presentation.main.game.FragmentGame
 import ru.gorbunova.tictactoe.presentation.main.menu.FragmentMenu
 import ru.gorbunova.tictactoe.presentation.main.records.FragmentRecordsTable
+import soft.eac.appmvptemplate.views.ABaseActivity
 import javax.inject.Inject
 
-class GameActivity : ABaseActivity(), INavigateRouterMain {
+class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INavigateRouterMain {
 
     companion object {
         fun show() {
@@ -29,9 +27,6 @@ class GameActivity : ABaseActivity(), INavigateRouterMain {
 
     @Inject
     lateinit var userRepository: UserRepository
-
-    //    private var gameFragment: FragmentGame = FragmentGame()
-//    private var gameFragment1 = FragmentGame()
     private val gameFragment: FragmentGame by lazy { FragmentGame() }
     private val menuFragment: FragmentMenu by lazy { FragmentMenu() }
     private val recordFragment: FragmentRecordsTable by lazy { FragmentRecordsTable() }
@@ -40,13 +35,12 @@ class GameActivity : ABaseActivity(), INavigateRouterMain {
         inject()
     }
 
-    fun inject() {
+    override fun inject() {
         DaggerAppComponent.create().inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_game)
         if (savedInstanceState != null)
             return
         showMenu()

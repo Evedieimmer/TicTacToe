@@ -1,24 +1,22 @@
 package ru.gorbunova.tictactoe.presentation.auth.signUp
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
-import ru.gorbunova.tictactoe.base.SubRX
+
+import moxy.InjectViewState
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
+import soft.eac.appmvptemplate.common.rx.SubRX
+import soft.eac.appmvptemplate.tools.ABasePresenter
 import javax.inject.Inject
 
 @InjectViewState
-class SignUpPresenter : MvpPresenter<ISignUpView> {
-    @Inject
-    constructor()
-
-    @Inject
-    lateinit var userRepository: UserRepository
+class SignUpPresenter @Inject constructor(
+    private var userRepository: UserRepository
+) : ABasePresenter<ISignUpView>() {
 
     fun registration(login: String, pass: String) {
         userRepository.registration(SubRX { _, e ->
             if (e != null) {
                 e.printStackTrace()
-                viewState.showError(e.localizedMessage)
+                viewState.showError(e.localizedMessage ?: "error")
                 return@SubRX
             }
             viewState.showSignInScreen()

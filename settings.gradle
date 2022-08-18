@@ -10,6 +10,7 @@ pluginManagement {
                 password = "${artifactory_password}"
             }
         }
+        jcenter()
     }
 }
 dependencyResolutionManagement {
@@ -24,6 +25,7 @@ dependencyResolutionManagement {
                 password = "${artifactory_password}"
             }
         }
+        jcenter()
     }
 }
 rootProject.name = "TicTacToe"

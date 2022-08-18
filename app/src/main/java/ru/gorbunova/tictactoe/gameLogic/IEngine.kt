@@ -1,11 +1,12 @@
 package ru.gorbunova.tictactoe.gameLogic
 
-interface IEngine {
-    val stateGame: GameState
-    val player: IPlayer
+import android.media.AsyncPlayer
+import ru.gorbunova.tictactoe.presentation.main.game.GamePresenter
 
+interface IEngine {
+    fun addListener(l: (IGameState) -> Unit)
     fun initGame()
-    fun executeMove()
-    fun isWinner()
-    fun turn()
+    fun addPlayer(player: IPlayer)
+    fun ready(player: IPlayer)
+    fun executeMove(player: IPlayer, index: Int)
 }

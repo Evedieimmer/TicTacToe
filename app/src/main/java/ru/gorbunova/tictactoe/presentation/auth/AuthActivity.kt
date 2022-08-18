@@ -2,16 +2,15 @@ package ru.gorbunova.tictactoe.presentation.auth
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import ru.gorbunova.tictactoe.App
-import ru.gorbunova.tictactoe.base.ABaseActivity
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.presentation.auth.load.FragmentLoad
 import ru.gorbunova.tictactoe.presentation.auth.signIn.FragmentSignIn
 import ru.gorbunova.tictactoe.presentation.auth.signUp.FragmentSignUp
 import ru.gorbunova.tictactoe.presentation.main.GameActivity
+import soft.eac.appmvptemplate.views.ABaseActivity
 
-class AuthActivity : ABaseActivity(), INavigateRouter {
+class AuthActivity : ABaseActivity(R.layout.activity_auth, R.id.container), INavigateRouter {
 
     companion object{
         fun show(){
@@ -25,7 +24,6 @@ class AuthActivity : ABaseActivity(), INavigateRouter {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_auth)
         if (savedInstanceState != null)
             return
          showLoad()

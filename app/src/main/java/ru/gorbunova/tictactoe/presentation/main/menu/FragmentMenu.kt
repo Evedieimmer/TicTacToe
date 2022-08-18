@@ -2,18 +2,17 @@ package ru.gorbunova.tictactoe.presentation.main.menu
 
 import android.os.Bundle
 import android.view.View
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import kotlinx.android.synthetic.main.fragment_menu.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
-import ru.gorbunova.tictactoe.base.ABaseFragment
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
-
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
+import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
 
-class FragmentMenu : ABaseFragment(), IMenuView {
+class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
 
     @Inject
     @InjectPresenter
@@ -26,9 +25,7 @@ class FragmentMenu : ABaseFragment(), IMenuView {
         DaggerAppComponent.create().inject(this)
     }
 
-    override fun getViewId() = R.layout.fragment_menu
-
-//    var mHandler: Handler? = null
+//     fun getViewId() = R.layout.fragment_menu
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
