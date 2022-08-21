@@ -20,6 +20,8 @@ class GameEngineLocal() : IEngine {
             cells[index] = value
         }
 
+        override fun getWinner (): String? = winner?.namePlayer
+
         override fun getCells() = cells.copyOf()
 
         fun isWin(player: IPlayer): Boolean {
@@ -53,13 +55,13 @@ class GameEngineLocal() : IEngine {
         }
     }
 
-    private val listeners = mutableListOf<(Int, Int) -> Unit>()
+    private val listeners = mutableListOf<(Int, Int, IGameState) -> Unit>()
     private var gameState: GameState? = null
     private var player1: IPlayer? = null
     private var player2: IPlayer? = null
 
 
-    override fun addListener(l: (cellIndex: Int, actionType: Int) -> Unit) {
+    override fun addListener(l: (cellIndex: Int, actionType: Int, gameResult: IGameState) -> Unit) {
         listeners.add(l)
     }
 
@@ -96,7 +98,7 @@ class GameEngineLocal() : IEngine {
             gameState.winner = it
             return
         }
-        listeners.onEach { it.invoke(indexCell, player.getActionType()) }
+        listeners.onEach { it.invoke(indexCell, player.getActionType(), gameState) }
         changeTurn()
     }
 

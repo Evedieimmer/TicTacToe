@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.fragment_game.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -52,20 +54,40 @@ class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
     }
 
     override fun changeCell(cellIndex: Int, stateCell: Int) {
-        when(stateCell) {
+        when (stateCell) {
             GAME_CELL_VALUE_ZERO -> {
-                boardList[cellIndex].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_zero, 0,0,0)
+                boardList[cellIndex].setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_zero,
+                    0,
+                    0,
+                    0
+                )
                 boardList[cellIndex].isClickable = false
             }
             GAME_CELL_VALUE_CROSS -> {
-                boardList[cellIndex].setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cross, 0,0,0)
+                boardList[cellIndex].setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_cross,
+                    0,
+                    0,
+                    0
+                )
                 boardList[cellIndex].isClickable = false
             }
         }
     }
 
-    private fun initBoard()
-    {
+    override fun openWinDialog(nameWinner: String) {
+        activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.setTitle("Поздравляем")
+                .setMessage("Победитель: $nameWinner")
+                .setPositiveButton("Начать заново") { dialog, id ->
+                    dialog.cancel()
+                }
+        }
+    }
+
+    private fun initBoard() {
         boardList.add(binding.btnGame1) //0
         boardList.add(binding.btnGame2) //1
         boardList.add(binding.btnGame3) //2

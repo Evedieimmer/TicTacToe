@@ -8,4 +8,5 @@ interface IGameState {
     }
 
     fun getCells(): IntArray
+    fun getWinner(): String?
 }

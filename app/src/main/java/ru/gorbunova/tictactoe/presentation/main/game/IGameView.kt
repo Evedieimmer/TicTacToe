@@ -7,4 +7,5 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(SkipStrategy::class)
 interface IGameView : MvpView {
    fun changeCell(cellIndex: Int, stateCell: Int)
+   fun openWinDialog(nameWinner: String)
 }
