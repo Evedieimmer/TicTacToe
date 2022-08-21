@@ -1,29 +1,31 @@
 package ru.gorbunova.tictactoe.gameLogic
 
-import ru.gorbunova.tictactoe.gameLogic.IPlayer.Companion.GAME_CELL_VALUE_NONE
+import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_CROSS
+import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_NONE
+import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_ZERO
 
-class LocalPlayer(override val namePlayer: String, override val score: Int) : IPlayer {
 
-    private val actionType = GAME_CELL_VALUE_NONE
+class LocalPlayer(
+    override val namePlayer: String,
+    override var score: Int?
+) : IPlayer {
 
-    override fun startPlay() {
-
-    }
+    override var action: Boolean = false
+    private var actionType = GAME_CELL_VALUE_NONE
+    var isReady: Boolean = false
 
     override fun ready() {
-
-    }
-
-    override fun exitGame() {
-        TODO("Not yet implemented")
-    }
-
-    override fun render() {
-        TODO("Not yet implemented")
+        isReady = true
     }
 
     override fun getActionType(): Int {
         return actionType
     }
 
+    override fun initPlayer(isFirst: Boolean): LocalPlayer {
+        action = isFirst
+        actionType = if( isFirst) GAME_CELL_VALUE_CROSS else GAME_CELL_VALUE_ZERO
+
+        return this
+    }
 }

@@ -20,10 +20,6 @@ class GameEngineLocal() : IEngine {
             cells[index] = value
         }
 
-        fun getWinner() {
-
-        }
-
         override fun getCells() = cells.copyOf()
 
         fun isWin(player: IPlayer): Boolean {
@@ -57,13 +53,13 @@ class GameEngineLocal() : IEngine {
         }
     }
 
-    private val listeners = mutableListOf<(IGameState) -> Unit>()
+    private val listeners = mutableListOf<(Int, Int) -> Unit>()
     private var gameState: GameState? = null
     private var player1: IPlayer? = null
     private var player2: IPlayer? = null
 
 
-    override fun addListener(l: (IGameState) -> Unit) {
+    override fun addListener(l: (cellIndex: Int, actionType: Int) -> Unit) {
         listeners.add(l)
     }
 
@@ -74,11 +70,11 @@ class GameEngineLocal() : IEngine {
 
     override fun addPlayer(player: IPlayer) {
         if (player1 == null) {
-            player1 = player
+            player1 = player.initPlayer(true)
             return
         }
         if (player2 == null) {
-            player2 = player
+            player2 = player.initPlayer(false)
             return
         }
         throw IllegalStateException("Не более 2х игроков")
@@ -88,26 +84,55 @@ class GameEngineLocal() : IEngine {
 
     }
 
-    override fun executeMove(player: IPlayer, index: Int) {
+    override fun executeMove(player: IPlayer, indexCell: Int) {
 
         val gameState = this.gameState ?: throw IllegalStateException("Игра не началась")
-        gameState.winner?.also { throw IllegalStateException("111") }
+        gameState.winner?.also { throw IllegalStateException("Победитель найден") }
         player2 ?: throw IllegalStateException("Нет игрока")
 
-        gameState.executeMove(index, player.getActionType())
-        gameState.isWin(player)
-
-        val winner: IPlayer = gameState.getWinner()
-
+        gameState.executeMove(indexCell, player.getActionType())
         checkWinner(gameState)?.also {
+
             gameState.winner = it
             return
         }
-        listeners.onEach { it.invoke(gameState) }
+        listeners.onEach { it.invoke(indexCell, player.getActionType()) }
+        changeTurn()
     }
 
     private fun checkWinner(state: GameState): IPlayer? {
+        val isPlayer1Win = state.isWin(player1 ?: throw IllegalStateException("Нет игрока"))
+        val isPlayer2Win = state.isWin(player2 ?: throw IllegalStateException("Нет игрока"))
 
+        if (isPlayer1Win && isPlayer2Win)
+            throw IllegalStateException("Оба игрока не могут быть победителями")
+
+        if (isPlayer1Win) {
+            player1?.score = player1?.score?.plus(1)
+            return player1
+        }
+        if (isPlayer2Win) {
+            player2?.score = player2?.score?.plus(1)
+            return player2
+        }
         return null
+    }
+
+    private fun changeTurn() {
+        val isPlayer1Turn = player1?.action ?: throw IllegalStateException("Нет игрока")
+        val isPlayer2Turn = player2?.action ?: throw IllegalStateException("Нет игрока")
+
+        if (isPlayer1Turn) {
+            player1?.action = false
+            player2?.action = true
+            return
+        }
+        if(isPlayer2Turn) {
+            player2?.action = false
+            player1?.action = true
+            return
+        }
+        throw IllegalStateException("Очередность хода не определена")
+
     }
 }
