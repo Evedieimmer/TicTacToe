@@ -2,11 +2,15 @@ package ru.gorbunova.tictactoe.gameLogic
 
 interface IPlayer {
 
-    val namePlayer: String
-    var score: Int?
-    var action: Boolean
-
-    fun ready()
+    //системные фун-ции для инициализации
     fun getActionType(): Int
-    fun initPlayer(isFirst: Boolean): IPlayer
+    fun setActionType(value: Int)
+    fun setEngine(engine: IEngine)
+    fun onWin()
+
+    //реализация игры
+    fun ready()
+    fun executeMove(indexCell: Int)
+    fun getScore(): Int
+
 }

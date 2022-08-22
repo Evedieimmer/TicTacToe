@@ -5,27 +5,38 @@ import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_NON
 import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_ZERO
 
 
-class LocalPlayer(
-    override val namePlayer: String,
-    override var score: Int?
-) : IPlayer {
+class LocalPlayer() : IPlayer {
 
-    override var action: Boolean = false
     private var actionType = GAME_CELL_VALUE_NONE
-    var isReady: Boolean = false
-
-    override fun ready() {
-        isReady = true
-    }
+    private var gameEngine: IEngine? = null
+    private var score = 0
 
     override fun getActionType(): Int {
         return actionType
     }
 
-    override fun initPlayer(isFirst: Boolean): LocalPlayer {
-        action = isFirst
-        actionType = if( isFirst) GAME_CELL_VALUE_CROSS else GAME_CELL_VALUE_ZERO
-
-        return this
+    override fun setActionType(value: Int) {
+        actionType = value
     }
+
+    override fun setEngine(engine: IEngine) {
+        gameEngine = engine
+    }
+
+    override fun onWin() {
+        score++
+    }
+
+
+    override fun ready() {
+        getEngine().ready(this)
+    }
+
+    override fun executeMove(indexCell: Int) {
+        getEngine().executeMove(this, indexCell)
+    }
+
+    override fun getScore() = score
+
+    private fun getEngine() = gameEngine ?: throw IllegalStateException("Игрок не добавлен в игру")
 }

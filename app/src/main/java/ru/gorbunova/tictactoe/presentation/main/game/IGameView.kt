@@ -8,4 +8,5 @@ import moxy.viewstate.strategy.StateStrategyType
 interface IGameView : MvpView {
    fun changeCell(cellIndex: Int, stateCell: Int)
    fun openWinDialog(nameWinner: String)
+   fun initBoard()
 }

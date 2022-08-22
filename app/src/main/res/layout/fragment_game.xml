@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="100dp">
+            android:layout_weight="0.33">
 
             <ImageView
                 android:layout_gravity="center"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="30dp"
-            android:layout_marginLeft="30dp">
+            android:layout_weight="0.33">
         <TextView
             android:id="@+id/score"
             android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="30dp">
+            android:layout_weight="0.33">
 
             <ImageView
                 android:layout_gravity="center"
@@ -117,11 +117,7 @@
             android:layout_height="100dp"
             android:layout_alignParentStart="true"
             android:background="@drawable/play_button"
-            app:backgroundTint="@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint="@color/game_background_color" />
 
         <Button
             android:id="@+id/btnGame2"
@@ -131,11 +127,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/btnGame1"
             android:background="@drawable/play_button"
-            app:backgroundTint="@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint="@color/game_background_color" />
 
         <Button
             android:id="@+id/btnGame3"
@@ -145,11 +137,7 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/btnGame2"
             android:background="@drawable/play_button"
-            app:backgroundTint="@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint="@color/game_background_color" />
 
         <Button
             android:id="@+id/btnGame4"
@@ -159,11 +147,7 @@
             android:layout_below="@+id/btnGame1"
             android:layout_marginTop="5dp"
             android:background="@drawable/play_button"
-            app:backgroundTint="@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint="@color/game_background_color"/>
 
         <Button
             android:id="@+id/btnGame5"
@@ -175,11 +159,7 @@
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/btnGame4"
             android:background="@drawable/play_button"
-            app:backgroundTint = "@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint = "@color/game_background_color" />
 
         <Button
             android:id="@+id/btnGame6"
@@ -191,11 +171,7 @@
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/btnGame5"
             android:background="@drawable/play_button"
-            app:backgroundTint = "@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint = "@color/game_background_color"/>
 
         <Button
             android:id="@+id/btnGame7"
@@ -205,11 +181,7 @@
             android:layout_below="@+id/btnGame4"
             android:layout_marginTop="5dp"
             android:background="@drawable/play_button"
-            app:backgroundTint = "@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint = "@color/game_background_color" />
         <Button
             android:id="@+id/btnGame8"
             style="@style/Widget.Material3.Button.TonalButton.Icon"
@@ -220,11 +192,7 @@
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/btnGame7"
             android:background="@drawable/play_button"
-            app:backgroundTint = "@color/game_background_color"
-            app:icon="@drawable/ic_cross"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint = "@color/game_background_color" />
         <Button
             android:id="@+id/btnGame9"
             style="@style/Widget.Material3.Button.TonalButton.Icon"
@@ -235,11 +203,7 @@
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/btnGame8"
             android:background="@drawable/play_button"
-            app:backgroundTint = "@color/game_background_color"
-            app:icon="@drawable/ic_zero"
-            app:iconGravity="textEnd"
-            app:iconSize="40dp"
-            app:iconTint="@color/button_color" />
+            app:backgroundTint = "@color/game_background_color"/>
     </RelativeLayout>
 
     <Button

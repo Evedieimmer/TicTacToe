@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
 
-    private lateinit var binding: FragmentGameBinding
+//    private lateinit var binding: FragmentGameBinding
     private var boardList = mutableListOf<Button>()
 
     @Inject
@@ -77,26 +77,31 @@ class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
     }
 
     override fun openWinDialog(nameWinner: String) {
+
+//        val isWinnerExist: String
+//        if(nameWinner != null) isWinnerExist = "Победил: $nameWinner"
+//        else isWinnerExist = "Ничья!"
+
         activity?.let {
             val builder = AlertDialog.Builder(it)
-            builder.setTitle("Поздравляем")
-                .setMessage("Победитель: $nameWinner")
+            builder.setTitle("Игра окончена")
+                .setMessage(nameWinner)
                 .setPositiveButton("Начать заново") { dialog, id ->
                     dialog.cancel()
                 }
         }
     }
 
-    private fun initBoard() {
-        boardList.add(binding.btnGame1) //0
-        boardList.add(binding.btnGame2) //1
-        boardList.add(binding.btnGame3) //2
-        boardList.add(binding.btnGame4) //3
-        boardList.add(binding.btnGame5) //4
-        boardList.add(binding.btnGame6) //5
-        boardList.add(binding.btnGame7) //6
-        boardList.add(binding.btnGame8) //7
-        boardList.add(binding.btnGame9) //8
+    override fun initBoard() {
+        boardList.add(btnGame1)
+        boardList.add(btnGame2)
+        boardList.add(btnGame3)
+        boardList.add(btnGame4)
+        boardList.add(btnGame5)
+        boardList.add(btnGame6)
+        boardList.add(btnGame7)
+        boardList.add(btnGame8)
+        boardList.add(btnGame9)
     }
 }
 
