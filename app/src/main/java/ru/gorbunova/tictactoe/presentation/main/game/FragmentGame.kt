@@ -77,14 +77,13 @@ class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
     }
 
     override fun openWinDialog(nameWinner: String) {
-
 //        val isWinnerExist: String
 //        if(nameWinner != null) isWinnerExist = "Победил: $nameWinner"
 //        else isWinnerExist = "Ничья!"
 
         activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.setTitle("Игра окончена")
+            AlertDialog.Builder(it)
+                .setTitle("Игра окончена")
                 .setMessage(nameWinner)
                 .setPositiveButton("Начать заново") { dialog, id ->
                     dialog.cancel()

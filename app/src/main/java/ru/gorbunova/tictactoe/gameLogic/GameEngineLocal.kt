@@ -1,6 +1,8 @@
 package ru.gorbunova.tictactoe.gameLogic
 
 import androidx.camera.core.UseCaseGroup
+import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.STATE_GAME_END
+import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.STATE_WAITING_PLAYERS_READY
 import kotlin.random.Random
 
 class GameEngineLocal() : IEngine {
@@ -21,7 +23,8 @@ class GameEngineLocal() : IEngine {
         private val cells: IntArray = IntArray(9) { -1 },
         internal var winner: IPlayer? = null,
         //какой ход ожидается
-        var currentActionType: Int = getActionType()
+        private var currentActionType: Int = getActionType(),
+        var statusGame: Int = STATE_WAITING_PLAYERS_READY
 
     ) : IGameState {
 
@@ -37,8 +40,13 @@ class GameEngineLocal() : IEngine {
             cells[index] = value
         }
 
-        override fun
-                getWinner () = winner
+        override fun getWinner () = winner
+
+        override fun setStatus(value: Int) {
+            statusGame = value
+        }
+
+        override fun getStatus(): Int = statusGame
 
         fun isGameOver() = winner != null && cells.firstOrNull { it == IGameState.GAME_CELL_VALUE_NONE } == null
 
@@ -83,6 +91,8 @@ class GameEngineLocal() : IEngine {
     private var gameState: GameState? = null
     private var player1: IPlayer? = null
     private var player2: IPlayer? = null
+    private var player1ready: IPlayer? = null
+    private var player2ready: IPlayer? = null
 
 
     override fun addListener(l: (engine: IEngine) -> Unit) {
@@ -90,7 +100,6 @@ class GameEngineLocal() : IEngine {
     }
 
     override fun initGame() {
-
         gameState = GameState()
     }
 
@@ -113,6 +122,18 @@ class GameEngineLocal() : IEngine {
 
     override fun ready(player: IPlayer) {
 
+        //если оба игрока здесь, то начнем игру
+        val player1 = player1ready
+
+        if (player1ready == null)
+            player1ready = player
+
+        else if (player1 != player && player2ready == null) {
+            player1ready = player
+            // start game
+            gameState?.setStatus(IGameState.STATE_GAME_PROCESSING)
+
+        }
 
         render()
     }
@@ -127,6 +148,7 @@ class GameEngineLocal() : IEngine {
         checkWinner(gameState)?.also {
             gameState.winner = it
             it.onWin()
+            gameState.setStatus(STATE_GAME_END)
             return
         }
 
@@ -138,11 +160,13 @@ class GameEngineLocal() : IEngine {
 
         player1?.also {
             if (state.isWin(it))
+                state.setStatus(STATE_GAME_END)
                 return it
         }
 
         player2?.also {
             if (state.isWin(it))
+                state.setStatus(STATE_GAME_END)
                 return it
         }
 
