@@ -12,5 +12,6 @@ interface IPlayer {
     fun ready()
     fun executeMove(indexCell: Int)
     fun getScore(): Int
+    fun getName(): String
 
 }

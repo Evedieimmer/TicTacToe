@@ -1,6 +1,5 @@
 package ru.gorbunova.tictactoe.gameLogic
 
-import androidx.camera.core.UseCaseGroup
 import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.STATE_GAME_END
 import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.STATE_WAITING_PLAYERS_READY
 import kotlin.random.Random
@@ -23,10 +22,14 @@ class GameEngineLocal() : IEngine {
         private val cells: IntArray = IntArray(9) { -1 },
         internal var winner: IPlayer? = null,
         //какой ход ожидается
-        private var currentActionType: Int = getActionType(),
+//        private var currentActionType: Int = getActionType(),
         var statusGame: Int = STATE_WAITING_PLAYERS_READY
 
     ) : IGameState {
+
+        internal var player1: IPlayer? = null
+        internal var player2: IPlayer? = null
+        internal var currentPlayer: IPlayer? = null
 
         fun executeMove(index: Int, value: Int) {
             if (index < 0 || index > 8) throw IllegalArgumentException("массив от 0 до 8")
@@ -53,7 +56,8 @@ class GameEngineLocal() : IEngine {
         override fun getCells() = cells.copyOf()
 
         fun changeTurn() {
-            currentActionType = getActionType(currentActionType)
+//            currentActionType = getActionType(currentActionType)
+            currentPlayer = if(currentPlayer == player1) player2 else player1
         }
 
         fun isWin(player: IPlayer): Boolean {
@@ -89,14 +93,17 @@ class GameEngineLocal() : IEngine {
 
     private val listeners = mutableListOf<(IEngine) -> Unit>()
     private var gameState: GameState? = null
-    private var player1: IPlayer? = null
-    private var player2: IPlayer? = null
     private var player1ready: IPlayer? = null
     private var player2ready: IPlayer? = null
 
-
     override fun addListener(l: (engine: IEngine) -> Unit) {
-        listeners.add(l)
+        if (!listeners.contains(l))
+            listeners.add(l)
+        render()
+    }
+
+    override fun removeListener(l: (IEngine) -> Unit) {
+        listeners.remove(l)
     }
 
     override fun initGame() {
@@ -105,16 +112,17 @@ class GameEngineLocal() : IEngine {
 
     override fun addPlayer(player: IPlayer) {
 
+        val state = checkState()
         player.setEngine(this)
 
-        if (player1 == null) {
+        if (state.player1 == null) {
             player.setActionType(getActionType())
-            player1 = player
+            state.player1 = player
             return
         }
-        if (player2 == null) {
-            player.setActionType(getActionType(player1!!.getActionType()))
-            player2 = player
+        if (state.player2 == null) {
+            player.setActionType(getActionType(state.player1!!.getActionType()))
+            state.player2 = player
             return
         }
         throw IllegalStateException("Не более 2х игроков")
@@ -129,20 +137,18 @@ class GameEngineLocal() : IEngine {
             player1ready = player
 
         else if (player1 != player && player2ready == null) {
-            player1ready = player
+            player2ready = player
             // start game
             gameState?.setStatus(IGameState.STATE_GAME_PROCESSING)
-
         }
-
         render()
     }
 
     override fun executeMove(player: IPlayer, indexCell: Int) {
 
-        val gameState = this.gameState ?: throw IllegalStateException("Игра не началась")
+        val gameState = checkState()
         gameState.winner?.also { throw IllegalStateException("Победитель найден") }
-        player2 ?: throw IllegalStateException("Нет игрока")
+        gameState.player2 ?: throw IllegalStateException("Нет игрока")
 
         gameState.executeMove(indexCell, player.getActionType())
         checkWinner(gameState)?.also {
@@ -156,15 +162,25 @@ class GameEngineLocal() : IEngine {
         render()
     }
 
+    override fun getState(): IGameState = checkState()
+
+    override fun getPlayer1(): IPlayer = checkState().player1 ?: throw IllegalStateException("Нет 1го игрока")
+
+    override fun getPlayer2(): IPlayer? = checkState().player2
+
+    override fun getCurrentPlayer() = checkState().currentPlayer
+
+    private fun checkState() = gameState ?: throw IllegalStateException("Нет состояния игры")
+
     private fun checkWinner(state: GameState): IPlayer? {
 
-        player1?.also {
+        state.player1?.also {
             if (state.isWin(it))
                 state.setStatus(STATE_GAME_END)
                 return it
         }
 
-        player2?.also {
+        state.player2?.also {
             if (state.isWin(it))
                 state.setStatus(STATE_GAME_END)
                 return it
@@ -173,7 +189,10 @@ class GameEngineLocal() : IEngine {
         return null
     }
 
-    private fun render() {
+     private fun render() {
         listeners.onEach { it.invoke(this) }
     }
+
+
+
 }

@@ -20,15 +20,15 @@ object ServiceGame {
     // если с ботом - имя юзера и "бот"
     // если сетевая - имена юзеров
 
-    private var winner = ""
-    private var winnerScore = 0
-    private var player1: IPlayer? = null //опционал - значит может быть null
-    private var player2: IPlayer? = null
-    private var engine: IEngine? = null
+    internal var winner = ""
+    internal var winnerScore = 0
+    internal var player1: IPlayer? = null //опционал - значит может быть null
+    internal var player2: IPlayer? = null
+    internal var engine: IEngine? = null
 
 
 
-    private  fun typeOfGame(typeGame: Int) {
+    fun typeOfGame(typeGame: Int) {
         when(typeGame) {
             LOCAL_GAME -> createLocalGame()
             GAME_WITH_BOT -> createGameWithBot()
@@ -42,26 +42,23 @@ object ServiceGame {
         return ""
     }
 
-    private fun createLocalGame() {
+     private fun createLocalGame() {
 
-        val gameEngineLocal = GameEngineLocal().apply { initGame() }
+         //создаем gameState
+         engine?.apply { initGame() }
 
-        val player1 = LocalPlayer()
-        val player2 = LocalPlayer()
+//        val gameEngineLocal = GameEngineLocal().apply { initGame() }
+//        val player1 = LocalPlayer()
+//        val player2 = LocalPlayer()
 
-        gameEngineLocal.addPlayer(player1)
-        gameEngineLocal.addPlayer(player2)
+        //добавляем пользователей в игру и назначем роли: крестик/нолик
+         player1?.let { engine?.addPlayer(it) }
+         player2?.let { engine?.addPlayer(it) }
 
-        player1.ready()
-        player2.ready()
-
-
-
-
-
-//        gameEngineLocal.addListener { gameEngine ->
-//
-//        }
+        //игроки передают свою готовность движку
+        //если все готовы состояние игры получает статус "игра началась"
+         (player1)?.ready()
+         (player2)?.ready()
     }
 
     private fun createGameWithBot() {

@@ -5,7 +5,9 @@ import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_NON
 import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_ZERO
 
 
-class LocalPlayer() : IPlayer {
+class LocalPlayer(
+    private val name: String
+) : IPlayer {
 
     private var actionType = GAME_CELL_VALUE_NONE
     private var gameEngine: IEngine? = null
@@ -37,6 +39,8 @@ class LocalPlayer() : IPlayer {
     }
 
     override fun getScore() = score
+
+    override fun getName() = name
 
     private fun getEngine() = gameEngine ?: throw IllegalStateException("Игрок не добавлен в игру")
 }

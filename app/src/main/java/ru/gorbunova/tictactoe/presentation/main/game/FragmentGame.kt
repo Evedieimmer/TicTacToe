@@ -3,41 +3,28 @@ package ru.gorbunova.tictactoe.presentation.main.game
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import androidx.annotation.DrawableRes
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.fragment_game.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
-import ru.gorbunova.tictactoe.databinding.FragmentGameBinding
-import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
-import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_CROSS
-import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_ZERO
+import ru.gorbunova.tictactoe.gameLogic.*
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
-import ru.gorbunova.tictactoe.presentation.main.menu.CellState
+import soft.eac.appmvptemplate.common.childViews
 import soft.eac.appmvptemplate.views.ABaseFragment
-import javax.inject.Inject
 
 
-class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
+abstract class FragmentGame : ABaseFragment(R.layout.fragment_game) {
 
 //    private lateinit var binding: FragmentGameBinding
     private var boardList = mutableListOf<Button>()
 
-    @Inject
-    @InjectPresenter
-    lateinit var presenter: GamePresenter
-
-    @ProvidePresenter
-    fun providePresenter() = presenter
-
-    override fun inject() {
-        DaggerAppComponent.create().inject(this)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val engine = ServiceGame.engine
+        if (engine == null) startGame()
+        else resumeGame(engine)
 
         btnQuitTheGame.setOnClickListener {
             activity.let {
@@ -45,38 +32,18 @@ class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
                     it.showMenu()
             }
         }
-        initBoard()
-        boardList.forEachIndexed { index, button ->
-            button.setOnClickListener {
-                presenter.clickOnCell(index)
-            }
-        }
     }
 
-    override fun changeCell(cellIndex: Int, stateCell: Int) {
-        when (stateCell) {
-            GAME_CELL_VALUE_ZERO -> {
-                boardList[cellIndex].setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_zero,
-                    0,
-                    0,
-                    0
-                )
-                boardList[cellIndex].isClickable = false
-            }
-            GAME_CELL_VALUE_CROSS -> {
-                boardList[cellIndex].setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_cross,
-                    0,
-                    0,
-                    0
-                )
-                boardList[cellIndex].isClickable = false
-            }
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        ServiceGame.engine?.removeListener(provideListener())
     }
 
-    override fun openWinDialog(nameWinner: String) {
+    fun renderPlayer1(player: IPlayer) = renderPlayer(llPlayer1, player)
+
+    fun renderPlayer2(player: IPlayer) = renderPlayer(llPlayer2, player)
+
+    fun onWinner(player: IPlayer) {
 //        val isWinnerExist: String
 //        if(nameWinner != null) isWinnerExist = "Победил: $nameWinner"
 //        else isWinnerExist = "Ничья!"
@@ -84,14 +51,67 @@ class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
         activity?.let {
             AlertDialog.Builder(it)
                 .setTitle("Игра окончена")
-                .setMessage(nameWinner)
+                .setMessage(player.getName())
                 .setPositiveButton("Начать заново") { dialog, id ->
                     dialog.cancel()
                 }
         }
     }
 
-    override fun initBoard() {
+    protected fun renderCells(state: IGameState) {
+        state.getCells().onEachIndexed { index, value ->
+            changeCell(index, value)
+        }
+    }
+
+    abstract fun createEngine(): IEngine
+
+    abstract fun createPlayers(engine: IEngine)
+
+    abstract fun provideListener(): (IEngine) -> Unit
+
+    private fun startGame() {
+        createEngine().also {
+            it.initGame()
+            createPlayers(it)
+            resumeGame(it)
+        }
+    }
+
+    private fun resumeGame(engine: IEngine) {
+        engine.addListener(provideListener())
+        initBoard(engine)
+    }
+
+
+    private fun renderPlayer(view: LinearLayout, player: IPlayer) {
+        view.childViews(TextView::class.java)[0].text = player.getName()
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    private fun changeCell(cellIndex: Int, stateCell: Int) {
+        val btn = boardList[cellIndex]
+        val drawableId = when (stateCell) {
+            IGameState.GAME_CELL_VALUE_ZERO -> R.drawable.ic_zero
+            IGameState.GAME_CELL_VALUE_CROSS -> R.drawable.ic_cross
+            else -> R.color.white
+        }
+        btn.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0)
+        btn.isClickable = stateCell != IGameState.GAME_CELL_VALUE_NONE
+    }
+
+    private fun initBoard(engine: IEngine) {
+
         boardList.add(btnGame1)
         boardList.add(btnGame2)
         boardList.add(btnGame3)
@@ -101,6 +121,12 @@ class FragmentGame : ABaseFragment(R.layout.fragment_game), IGameView {
         boardList.add(btnGame7)
         boardList.add(btnGame8)
         boardList.add(btnGame9)
+
+        boardList.forEachIndexed { index, button ->
+            button.setOnClickListener {
+                engine.getCurrentPlayer()
+            }
+        }
     }
 }
 

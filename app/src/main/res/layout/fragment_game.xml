@@ -27,6 +27,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/llPlayer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -40,9 +41,9 @@
                 android:background="@drawable/shape"
                 android:src="@drawable/ic_avatar_placeholder"
                 app:tint="@color/white" />
+
             <TextView
                 android:layout_gravity="center"
-                android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/user_name" />
@@ -69,6 +70,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llPlayer2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -82,9 +84,9 @@
                 android:background="@drawable/shape"
                 android:src="@drawable/ic_avatar_placeholder"
                 app:tint="@color/white" />
+
             <TextView
                 android:layout_gravity="center"
-                android:id="@+id/userName2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/user_name" />
@@ -159,7 +161,7 @@
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/btnGame4"
             android:background="@drawable/play_button"
-            app:backgroundTint = "@color/game_background_color" />
+            app:backgroundTint="@color/game_background_color" />
 
         <Button
             android:id="@+id/btnGame6"
