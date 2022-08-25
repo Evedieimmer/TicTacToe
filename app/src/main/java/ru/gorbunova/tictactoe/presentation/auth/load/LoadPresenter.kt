@@ -13,9 +13,9 @@ class LoadPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        App.handler.postDelayed({
+//        App.handler.postDelayed({
             loadStaticResources()
-        }, 500)
+//        }, 500)
     }
 
     private fun loadStaticResources() {

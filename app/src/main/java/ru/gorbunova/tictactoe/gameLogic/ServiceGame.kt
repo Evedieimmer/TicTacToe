@@ -1,6 +1,6 @@
 package ru.gorbunova.tictactoe.gameLogic
 
-object ServiceGame {
+object ServiceGame{
 
     //сервис не может создать игрока (кроме бота)
     //сервис нужен для хранения объектов на уровне приложения (вдруг юзер решит свернуть приложение)
@@ -20,53 +20,27 @@ object ServiceGame {
     // если с ботом - имя юзера и "бот"
     // если сетевая - имена юзеров
 
-    internal var winner = ""
-    internal var winnerScore = 0
-    internal var player1: IPlayer? = null //опционал - значит может быть null
-    internal var player2: IPlayer? = null
     internal var engine: IEngine? = null
-
-
-
-    fun typeOfGame(typeGame: Int) {
-        when(typeGame) {
-            LOCAL_GAME -> createLocalGame()
-            GAME_WITH_BOT -> createGameWithBot()
-            NETWORK_GAME -> createNetworkGame()
-            else -> throw IllegalStateException("Игра не выбрана")
+        set(value) {
+            field = value
         }
+
+
+
+
+    fun endGame() {
+        val engine = this.engine ?: return
+        engine.endGame()
+        this.engine = null
     }
 
-    private fun getNamePlayer(): String {
-        //забираем имя пользователя
-        return ""
+    fun restartGame() {
+        val engine = this.engine ?: return
+        engine.restart()
     }
 
-     private fun createLocalGame() {
-
-         //создаем gameState
-         engine?.apply { initGame() }
-
-//        val gameEngineLocal = GameEngineLocal().apply { initGame() }
-//        val player1 = LocalPlayer()
-//        val player2 = LocalPlayer()
-
-        //добавляем пользователей в игру и назначем роли: крестик/нолик
-         player1?.let { engine?.addPlayer(it) }
-         player2?.let { engine?.addPlayer(it) }
-
-        //игроки передают свою готовность движку
-        //если все готовы состояние игры получает статус "игра началась"
-         (player1)?.ready()
-         (player2)?.ready()
-    }
-
-    private fun createGameWithBot() {
-
-    }
-
-    private fun createNetworkGame() {
-
+    fun createLocalGame() = GameEngineLocal().apply {
+        engine = this
     }
 
 }

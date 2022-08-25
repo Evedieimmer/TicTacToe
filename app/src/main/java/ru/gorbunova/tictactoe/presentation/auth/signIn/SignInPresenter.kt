@@ -29,6 +29,4 @@ class SignInPresenter : ABasePresenter<ISignInView> {
             viewState.goToMenu()
         }, login, password)
     }
-
-
 }

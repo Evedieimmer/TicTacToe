@@ -7,7 +7,7 @@ import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import ru.gorbunova.tictactoe.presentation.auth.AuthActivity
-import ru.gorbunova.tictactoe.presentation.main.game.FragmentGame
+import ru.gorbunova.tictactoe.presentation.main.game.FragmentLocalGame
 import ru.gorbunova.tictactoe.presentation.main.menu.FragmentMenu
 import ru.gorbunova.tictactoe.presentation.main.records.FragmentRecordsTable
 import soft.eac.appmvptemplate.views.ABaseActivity
@@ -25,15 +25,13 @@ class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INav
         }
     }
 
+
+
     @Inject
     lateinit var userRepository: UserRepository
-    private val gameFragment: FragmentGame by lazy { FragmentGame() }
+//    private val gameLocalFragment: FragmentLocalGame by lazy { FragmentLocalGame() }
     private val menuFragment: FragmentMenu by lazy { FragmentMenu() }
     private val recordFragment: FragmentRecordsTable by lazy { FragmentRecordsTable() }
-
-    init {
-        inject()
-    }
 
     override fun inject() {
         DaggerAppComponent.create().inject(this)
@@ -47,7 +45,7 @@ class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INav
     }
 
     override fun showGame() {
-        replace(gameFragment, "Game")
+        replace(FragmentLocalGame(), "Game")
     }
 
     override fun showMenu() {

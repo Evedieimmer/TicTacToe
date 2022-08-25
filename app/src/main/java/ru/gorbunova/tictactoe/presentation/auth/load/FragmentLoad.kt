@@ -20,7 +20,6 @@ class FragmentLoad : ABaseFragment(R.layout.fragment_load), ILoadView{
 
     override fun inject() {
         DaggerAppComponent.create().inject(this)
-        println()
     }
 
     override fun onLoadingComplete() {

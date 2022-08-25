@@ -16,6 +16,7 @@ interface IGameState {
     fun getWinner(): IPlayer?
     fun setStatus(value: Int)
     fun getStatus(): Int
+    fun restart()
 
     //исключения при отсутствии подключения
     //вид игры онлайн/офлайн

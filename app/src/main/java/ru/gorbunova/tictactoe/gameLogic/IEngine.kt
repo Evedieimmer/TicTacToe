@@ -11,4 +11,7 @@ interface IEngine {
     fun getPlayer1(): IPlayer
     fun getPlayer2(): IPlayer?
     fun getCurrentPlayer(): IPlayer?
+    fun endGame()
+    fun restart()
+    fun isGameOver(): Boolean
 }

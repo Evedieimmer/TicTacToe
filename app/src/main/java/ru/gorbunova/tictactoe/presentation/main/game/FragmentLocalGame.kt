@@ -1,9 +1,6 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
-import kotlinx.android.synthetic.main.fragment_game.*
 import ru.gorbunova.tictactoe.gameLogic.*
-import ru.gorbunova.tictactoe.gameLogic.ServiceGame.LOCAL_GAME
-
 
 class FragmentLocalGame: FragmentGame() {
 
@@ -12,6 +9,9 @@ class FragmentLocalGame: FragmentGame() {
         val state = engine.getState()
         val winner = state.getWinner()
         if (winner != null) onWinner(winner)
+        else if (engine.isGameOver()) {
+            onGameOver()
+        }
         else {
             engine.getPlayer1().also {
                 renderPlayer1(it)
@@ -19,13 +19,13 @@ class FragmentLocalGame: FragmentGame() {
             engine.getPlayer2()?.also {
                 renderPlayer2(it)
             }
-            renderCells(state)
         }
+        renderCells(state)
     }
 
     override fun provideListener() = listener
 
-    override fun createEngine() = GameEngineLocal()
+    override fun createEngine() = ServiceGame.createLocalGame()
 
     override fun createPlayers(engine: IEngine) {
         val player1 = LocalPlayer("Игрок 1")

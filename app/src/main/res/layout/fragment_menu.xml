@@ -95,8 +95,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
         android:layout_marginTop="10dp"
-        android:text="@string/game_with_friends"
-        android:backgroundTint="@color/button_color"/>
+        android:backgroundTint="@color/button_color"
+        android:text="@string/game_with_friends" />
 
     <Button
         android:id="@+id/btnWithBot"

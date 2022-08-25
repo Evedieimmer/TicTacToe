@@ -10,7 +10,7 @@ class GameEngineLocal() : IEngine {
 
         private val random: Random by lazy { Random(System.currentTimeMillis()) }
 
-        fun getActionType(actionType: Int = IGameState.GAME_CELL_VALUE_NONE) = when(actionType) {
+        fun getActionType(actionType: Int = IGameState.GAME_CELL_VALUE_NONE) = when (actionType) {
             IGameState.GAME_CELL_VALUE_CROSS -> IGameState.GAME_CELL_VALUE_ZERO
             IGameState.GAME_CELL_VALUE_ZERO -> IGameState.GAME_CELL_VALUE_CROSS
             else -> random.nextInt(IGameState.GAME_CELL_VALUE_CROSS + 1)
@@ -19,10 +19,9 @@ class GameEngineLocal() : IEngine {
 
     class GameState(
 
-        private val cells: IntArray = IntArray(9) { -1 },
+        private var cells: IntArray = IntArray(9) { -1 },
         internal var winner: IPlayer? = null,
         //какой ход ожидается
-//        private var currentActionType: Int = getActionType(),
         var statusGame: Int = STATE_WAITING_PLAYERS_READY
 
     ) : IGameState {
@@ -43,26 +42,33 @@ class GameEngineLocal() : IEngine {
             cells[index] = value
         }
 
-        override fun getWinner () = winner
+        override fun getWinner() = winner
 
         override fun setStatus(value: Int) {
             statusGame = value
         }
 
-        override fun getStatus(): Int = statusGame
+        override fun restart() {
+            cells = IntArray(9) { -1 }
+            winner = null
+            statusGame = STATE_WAITING_PLAYERS_READY
+        }
 
-        fun isGameOver() = winner != null && cells.firstOrNull { it == IGameState.GAME_CELL_VALUE_NONE } == null
+        override fun getStatus(): Int = statusGame
 
         override fun getCells() = cells.copyOf()
 
+        fun isGameOver() = winner != null && cells.firstOrNull { it == IGameState.GAME_CELL_VALUE_NONE } == null
+
         fun changeTurn() {
-//            currentActionType = getActionType(currentActionType)
-            currentPlayer = if(currentPlayer == player1) player2 else player1
+            currentPlayer = if (currentPlayer == player1) player2 else player1
         }
 
         fun isWin(player: IPlayer): Boolean {
             val userTurnType: Int = player.getActionType()
-            return checkLines(userTurnType) || checkColumns(userTurnType) || checkCrosses(userTurnType)
+            return checkLines(userTurnType) || checkColumns(userTurnType) || checkCrosses(
+                userTurnType
+            )
         }
 
         private fun checkLines(userTurnType: Int): Boolean {
@@ -88,6 +94,10 @@ class GameEngineLocal() : IEngine {
         private fun column(userTurnType: Int, bias: Int): Boolean {
             val game: IntArray = cells
             return game[bias] == userTurnType && game[bias + 3] == userTurnType && game[bias + 6] == userTurnType
+        }
+
+        fun setRandomPlayer() {
+            currentPlayer = if (random.nextBoolean()) player1 else player2
         }
     }
 
@@ -135,11 +145,13 @@ class GameEngineLocal() : IEngine {
 
         if (player1ready == null)
             player1ready = player
-
         else if (player1 != player && player2ready == null) {
             player2ready = player
             // start game
-            gameState?.setStatus(IGameState.STATE_GAME_PROCESSING)
+            gameState?.also {
+                it.setRandomPlayer()
+                it.setStatus(IGameState.STATE_GAME_PROCESSING)
+            }
         }
         render()
     }
@@ -151,24 +163,45 @@ class GameEngineLocal() : IEngine {
         gameState.player2 ?: throw IllegalStateException("Нет игрока")
 
         gameState.executeMove(indexCell, player.getActionType())
+
         checkWinner(gameState)?.also {
             gameState.winner = it
             it.onWin()
-            gameState.setStatus(STATE_GAME_END)
+            render()
             return
         }
-
-        gameState.changeTurn()
         render()
+        gameState.changeTurn()
+
     }
 
     override fun getState(): IGameState = checkState()
 
-    override fun getPlayer1(): IPlayer = checkState().player1 ?: throw IllegalStateException("Нет 1го игрока")
+    override fun getPlayer1(): IPlayer =
+        checkState().player1 ?: throw IllegalStateException("Нет 1го игрока")
 
     override fun getPlayer2(): IPlayer? = checkState().player2
 
     override fun getCurrentPlayer() = checkState().currentPlayer
+
+    override fun endGame() {
+        listeners.clear()
+        gameState = null
+        player1ready = null
+        player2ready = null
+    }
+
+    override fun restart() {
+        val state = gameState?.also { it.restart() } ?: throw IllegalStateException("Нет состояния для рестарта")
+        val player1 = state.player1 ?: throw IllegalStateException("Нет состояния для рестарта")
+        val player2 = state.player2 ?: throw IllegalStateException("Нет состояния для рестарта")
+
+        player1.setActionType(getActionType())
+        player2.setActionType(getActionType(player1.getActionType()))
+        render()
+    }
+
+    override fun isGameOver() = gameState?.isGameOver() ?: false
 
     private fun checkState() = gameState ?: throw IllegalStateException("Нет состояния игры")
 
@@ -176,23 +209,20 @@ class GameEngineLocal() : IEngine {
 
         state.player1?.also {
             if (state.isWin(it))
-                state.setStatus(STATE_GAME_END)
                 return it
         }
 
         state.player2?.also {
             if (state.isWin(it))
-                state.setStatus(STATE_GAME_END)
                 return it
         }
 
         return null
     }
 
-     private fun render() {
+    private fun render() {
         listeners.onEach { it.invoke(this) }
     }
-
 
 
 }
