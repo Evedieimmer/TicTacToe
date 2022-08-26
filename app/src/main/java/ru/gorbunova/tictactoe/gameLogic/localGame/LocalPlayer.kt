@@ -1,8 +1,8 @@
-package ru.gorbunova.tictactoe.gameLogic
+package ru.gorbunova.tictactoe.gameLogic.localGame
 
-import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_CROSS
+import ru.gorbunova.tictactoe.gameLogic.IEngine
 import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_NONE
-import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.GAME_CELL_VALUE_ZERO
+import ru.gorbunova.tictactoe.gameLogic.IPlayer
 
 
 class LocalPlayer(

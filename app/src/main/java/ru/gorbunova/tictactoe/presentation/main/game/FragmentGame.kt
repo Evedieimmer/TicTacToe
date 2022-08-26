@@ -41,26 +41,9 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     fun renderPlayer2(player: IPlayer) = renderPlayer(binding.llPlayer2, player)
 
-    fun onWinner(player: IPlayer) {
-//        val isWinnerExist: String
-//        if(nameWinner != null) isWinnerExist = "Победил: $nameWinner"
-//        else isWinnerExist = "Ничья!"
+    fun onWinner(player: IPlayer) = showDialog(player.getName())
 
-        activity?.let {
-            AlertDialog.Builder(it)
-                .setTitle("Игра окончена")
-                .setCancelable(false)
-                .setMessage(player.getName())
-                .setPositiveButton("Снова") { _, _ ->
-                    restartGame()
-                }
-                .setNegativeButton("Выход") { _, _ ->
-                    endGame()
-                }
-                .create()
-                .show()
-        }
-    }
+    fun onGameOver() = showDialog("Ничья")
 
     protected fun renderCells(state: IGameState) {
         state.getCells().onEachIndexed { index, value ->
@@ -112,6 +95,14 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
         }
     }
 
+//    private fun getTextTurn(engine: IEngine): String {
+//         when (engine.getCurrentPlayer()?.getActionType() ?: -1) {
+//            0 -> return "нолик"
+//            1 -> return "крестик"
+//        }
+//        return "Error"
+//    }
+
 
     private fun renderPlayer(view: LinearLayout, player: IPlayer) {
         view.childViews(TextView::class.java)[0].text = "${player.getName()} ${player.getActionType()}"
@@ -149,13 +140,12 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
         }
     }
 
-    fun onGameOver(){
-
+    private fun showDialog(message: String) {
         activity?.let {
             AlertDialog.Builder(it)
                 .setTitle("Игра окончена")
                 .setCancelable(false)
-                .setMessage("Ничья")
+                .setMessage(message)
                 .setPositiveButton("Снова") { _, _ ->
                     restartGame()
                 }

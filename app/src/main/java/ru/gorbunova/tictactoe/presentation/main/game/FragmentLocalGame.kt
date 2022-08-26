@@ -1,6 +1,8 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
 import ru.gorbunova.tictactoe.gameLogic.*
+import ru.gorbunova.tictactoe.gameLogic.IEngine
+import ru.gorbunova.tictactoe.gameLogic.localGame.LocalPlayer
 
 class FragmentLocalGame: FragmentGame() {
 

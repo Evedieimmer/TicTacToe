@@ -1,10 +1,13 @@
-package ru.gorbunova.tictactoe.gameLogic
+package ru.gorbunova.tictactoe.gameLogic.localGame
 
-import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.STATE_GAME_END
+import ru.gorbunova.tictactoe.gameLogic.AEngine
+import ru.gorbunova.tictactoe.gameLogic.IEngine
+import ru.gorbunova.tictactoe.gameLogic.IGameState
 import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.STATE_WAITING_PLAYERS_READY
+import ru.gorbunova.tictactoe.gameLogic.IPlayer
 import kotlin.random.Random
 
-class GameEngineLocal() : IEngine {
+class GameEngineLocal() : AEngine() {
 
     companion object {
 
@@ -17,7 +20,7 @@ class GameEngineLocal() : IEngine {
         }
     }
 
-    class GameState(
+    private class GameState(
 
         private var cells: IntArray = IntArray(9) { -1 },
         internal var winner: IPlayer? = null,
@@ -26,9 +29,9 @@ class GameEngineLocal() : IEngine {
 
     ) : IGameState {
 
-        internal var player1: IPlayer? = null
-        internal var player2: IPlayer? = null
-        internal var currentPlayer: IPlayer? = null
+        var player1: IPlayer? = null
+        var player2: IPlayer? = null
+        var currentPlayer: IPlayer? = null
 
         fun executeMove(index: Int, value: Int) {
             if (index < 0 || index > 8) throw IllegalArgumentException("массив от 0 до 8")
@@ -58,7 +61,7 @@ class GameEngineLocal() : IEngine {
 
         override fun getCells() = cells.copyOf()
 
-        fun isGameOver() = winner != null && cells.firstOrNull { it == IGameState.GAME_CELL_VALUE_NONE } == null
+        override fun isGameOver() = winner == null && cells.firstOrNull { it == IGameState.GAME_CELL_VALUE_NONE } == null
 
         fun changeTurn() {
             currentPlayer = if (currentPlayer == player1) player2 else player1
@@ -101,20 +104,8 @@ class GameEngineLocal() : IEngine {
         }
     }
 
-    private val listeners = mutableListOf<(IEngine) -> Unit>()
-    private var gameState: GameState? = null
     private var player1ready: IPlayer? = null
     private var player2ready: IPlayer? = null
-
-    override fun addListener(l: (engine: IEngine) -> Unit) {
-        if (!listeners.contains(l))
-            listeners.add(l)
-        render()
-    }
-
-    override fun removeListener(l: (IEngine) -> Unit) {
-        listeners.remove(l)
-    }
 
     override fun initGame() {
         gameState = GameState()
@@ -148,7 +139,7 @@ class GameEngineLocal() : IEngine {
         else if (player1 != player && player2ready == null) {
             player2ready = player
             // start game
-            gameState?.also {
+            checkState().also {
                 it.setRandomPlayer()
                 it.setStatus(IGameState.STATE_GAME_PROCESSING)
             }
@@ -170,9 +161,8 @@ class GameEngineLocal() : IEngine {
             render()
             return
         }
-        render()
         gameState.changeTurn()
-
+        render()
     }
 
     override fun getState(): IGameState = checkState()
@@ -185,14 +175,14 @@ class GameEngineLocal() : IEngine {
     override fun getCurrentPlayer() = checkState().currentPlayer
 
     override fun endGame() {
-        listeners.clear()
+        super.endGame()
         gameState = null
         player1ready = null
         player2ready = null
     }
 
     override fun restart() {
-        val state = gameState?.also { it.restart() } ?: throw IllegalStateException("Нет состояния для рестарта")
+        val state = checkState().also { it.restart() }
         val player1 = state.player1 ?: throw IllegalStateException("Нет состояния для рестарта")
         val player2 = state.player2 ?: throw IllegalStateException("Нет состояния для рестарта")
 
@@ -201,9 +191,7 @@ class GameEngineLocal() : IEngine {
         render()
     }
 
-    override fun isGameOver() = gameState?.isGameOver() ?: false
-
-    private fun checkState() = gameState ?: throw IllegalStateException("Нет состояния игры")
+    private fun checkState() = gameState as? GameState ?: throw IllegalStateException("Нет состояния игры")
 
     private fun checkWinner(state: GameState): IPlayer? {
 
@@ -219,10 +207,4 @@ class GameEngineLocal() : IEngine {
 
         return null
     }
-
-    private fun render() {
-        listeners.onEach { it.invoke(this) }
-    }
-
-
 }
