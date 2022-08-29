@@ -20,7 +20,9 @@ import javax.inject.Singleton
 class NetModule {
     companion object {
 
-        private const val DOMAIN = "212.75.210.227"
+//        private const val DOMAIN = "212.75.210.227"
+        private const val DOMAIN = "10.102.100.91"
+
         const val DOMAIN_MAIN_API = "http://$DOMAIN:8080"
         private const val CONNECTION_TIMEOUT = 20000L
 

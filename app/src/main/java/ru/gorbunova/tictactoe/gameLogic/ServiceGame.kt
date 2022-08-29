@@ -7,10 +7,6 @@ object ServiceGame{
     //сервис не может создать игрока (кроме бота)
     //сервис нужен для хранения объектов на уровне приложения (вдруг юзер решит свернуть приложение)
 
-    const val LOCAL_GAME = 1
-    const val GAME_WITH_BOT = 2
-    const val NETWORK_GAME = 3
-
     internal var engine: IEngine? = null
         set(value) {
             field = value

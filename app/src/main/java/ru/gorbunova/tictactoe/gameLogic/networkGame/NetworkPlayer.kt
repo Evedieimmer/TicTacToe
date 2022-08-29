@@ -1,11 +1,14 @@
 package ru.gorbunova.tictactoe.gameLogic.networkGame
 
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.IEngine
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
 
 class NetworkPlayer(
     private val name: String
 ): IPlayer {
+
+    private val user: User? = null
     override fun getActionType(): Int {
         TODO("Not yet implemented")
     }
@@ -36,5 +39,10 @@ class NetworkPlayer(
 
     override fun getName(): String {
         TODO("Not yet implemented")
+    }
+
+    fun GetPlayerToken(): String{
+
+        return ""
     }
 }

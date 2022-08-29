@@ -1,30 +1,40 @@
 package ru.gorbunova.tictactoe.gameLogic.networkGame
 
+import com.google.gson.Gson
 import eac.network.*
+import ru.gorbunova.tictactoe.App
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.AEngine
 import ru.gorbunova.tictactoe.gameLogic.IGameState
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
+import java.io.IOException
 
 class GameEngineNetwork(
     private val ip: String,
     private val port: Int,
-    private val tokenProvider: () -> String
+    private val tokenProvider: ITokenProvider
 ):  AEngine(){
 
     companion object {
 
         // Команды сервера
-        private const val COMMAND_AUTHORIZATION = "AUTHORIZATION"
-        private const val COMMAND_SUCCESS = "SUCCESS"
-        private const val COMMAND_GAMES = "GAMES"
-        private const val COMMAND_RENDER = "RENDER"
+        private const val COMMAND_AUTHORIZATION = "AUTHORIZATION" //запрос на подключение к серверу
+        private const val COMMAND_SUCCESS = "SUCCESS" //в случае удачной авторизации на сервере
+        private const val COMMAND_ERROR = "ERROR" // в случае неудачной авторизации -> нужно выкинуть пользователя на экран авторизации
+        private const val COMMAND_GAMES = "GAMES" //список игр с сервера
+        private const val COMMAND_RENDER = "RENDER" // состояние игры
 
-        //команды клиента
-        private const val COMMAND_GAME = "GAME"
-        private const val COMMAND_READY = "READY"
-        private const val COMMAND_CELL = "CELL"
-        private const val COMMAND_EXIT = "EXIT"
-        private const val COMMAND_STATE = "STATE"
+
+        //команды клиента (в ответе всегда приходит рендер/состояние игры)
+        private const val COMMAND_GAME = "GAME" //отправка названия игры
+        private const val COMMAND_READY = "READY" //готовность игрока
+        private const val COMMAND_CELL = "CELL" //выполение хода
+        private const val COMMAND_EXIT = "EXIT" //выход из игры
+        private const val COMMAND_STATE = "STATE" //узнать состояние текущей игры
+
+        private const val TYPE_OF_GAME = "tic-tac-toe"
+
+        private val gson = Gson()
 
     }
 
@@ -60,22 +70,33 @@ class GameEngineNetwork(
     private val sender = PackageSender() // отправитель
     private val receiver = PackageReceiver() //приемник
     private var connection: Connection? = null
+    private var listenerCallback: ((Command?) -> Unit)? = null
 
     private val connectionListener: (Connection, ByteArray) -> Unit = { _, bytes ->
         val command = Command(bytes.decodeToString())
-        when (command.name) {
-            COMMAND_AUTHORIZATION -> onAuthorization {
+        println("$command")
 
-            }
-            COMMAND_SUCCESS -> {
+        val callback = listenerCallback
 
-            }
+        if (callback != null) {
 
-            else -> {
-                //обработать ошибку
+            listenerCallback = null
+            callback(command)
+
+        } else {
+            when (command.name) {
+                COMMAND_AUTHORIZATION -> onAuthorization()
+//                COMMAND_ERROR -> onErrorAuthorization() //пройти заново авторизацию
+//                COMMAND_SUCCESS -> { //ждать списка доступных игр, если нет, то вновь подключиться
+//
+//                }
+                COMMAND_GAMES -> sendTypeOfGame()//выбрать игру и отправить ответ GAME:tic-tac-toe
+                COMMAND_RENDER -> onRender(gson.fromJson(command.data ?: throw IllegalStateException ("Не"), RemoteState::class.java))
+                else -> {
+                    //обработать ошибку
+                }
             }
         }
-
     }
 
     override fun initGame() {
@@ -92,26 +113,39 @@ class GameEngineNetwork(
 
                 }
                 .setOnError<Connection> { connection, throwable ->
+
                     false
                 }
 
-            sender.register(this)
+//            sender.register(this)
             receiver.register(this, connectionListener)
         }
     }
 
     override fun addPlayer(player: IPlayer) {
-        val game = checkGame()
+//        val players = checkGame().players
+//        if(players.any { it.userLogin != player.getName() }) {
+//            onAuthorization()
+//        }
+//        else {
+//            ready(player)
+//        }
+        
         player.setEngine(this)
 
     }
 
     override fun ready(player: IPlayer) {
-        TODO("Not yet implemented")
+
+
+        send(COMMAND_READY)
     }
 
-    override fun executeMove(player: IPlayer, indexCell: Int) {
-        TODO("Not yet implemented")
+    override fun executeMove(player: IPlayer, indexCell: Int) { //"CELL:[0-8]"
+
+
+        val cells = checkGame().game
+        send("$COMMAND_CELL : ${cells.toString()}")
     }
 
     override fun getState(): IGameState {
@@ -131,7 +165,10 @@ class GameEngineNetwork(
     }
 
     override fun endGame() {
-        TODO("Not yet implemented")
+        super.endGame()
+
+
+        send(COMMAND_EXIT)
     }
 
     override fun restart() {
@@ -142,9 +179,54 @@ class GameEngineNetwork(
         TODO("Not yet implemented")
     }
 
-    private fun render() {
-        listeners.onEach { it.invoke(this) }
+    private fun checkGame() = renderGame ?: throw IllegalStateException("Нет игры")
+
+    private fun onAuthorization() {
+
+        setListenerCallback { command ->
+
+            if (command == null) {
+                tokenProvider.onError(IOException("Нет ответа"))
+            } else{
+                when (command.name) {
+                    COMMAND_SUCCESS -> {}
+                    COMMAND_ERROR -> {
+                        tokenProvider.onError(IllegalStateException(command.data ?: "Error"))
+                    }
+                    else -> throw  IllegalStateException ("")
+                }
+            }
+        }
+        send(tokenProvider.provideToken())
     }
 
-    private fun checkGame() = renderGame ?: throw IllegalStateException("Нет игры")
+    private fun send(command: Command) {
+        sender.send("$command")
+    }
+
+    private fun send(name: String, data : String? = null) {
+        send(Command(name).apply { this.data = data })
+    }
+
+    private fun onRender(state: RemoteState) {
+        renderGame = state
+        App.handler.post {
+            render()
+        }
+    }
+
+    private fun sendTypeOfGame(){
+        send(COMMAND_GAME, TYPE_OF_GAME)
+    }
+
+    private fun setListenerCallback(l: (Command?) -> Unit) {
+        listenerCallback?.also { throw IllegalStateException("Нет ") }
+        listenerCallback = l
+    }
+
+//    private fun onListenerCallback(command: Command) {
+//        listenerCallback?.also {
+//            it.invoke(command)
+//        } ?: throw IllegalStateException ("Error")
+//    }
 }

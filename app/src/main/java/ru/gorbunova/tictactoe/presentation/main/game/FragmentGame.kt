@@ -24,9 +24,7 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         startGame()
-
         binding.btnQuitTheGame.setOnClickListener {
             endGame()
         }
@@ -91,7 +89,8 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
         engine.addListener(provideListener())
         engine.addListener {
             binding.score.text = "${engine.getCurrentPlayer()?.getActionType() ?: -1}"
-            binding.scoreNum.text = "${engine.getPlayer1().getScore()} | ${engine.getPlayer2()?.getScore() ?: -1}"
+            binding.scoreNum.text =
+                "${engine.getPlayer1().getScore()} | ${engine.getPlayer2()?.getScore() ?: -1}"
         }
     }
 
@@ -105,7 +104,8 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
 
     private fun renderPlayer(view: LinearLayout, player: IPlayer) {
-        view.childViews(TextView::class.java)[0].text = "${player.getName()} ${player.getActionType()}"
+        view.childViews(TextView::class.java)[0].text =
+            "${player.getName()} ${player.getActionType()}"
     }
 
     private fun changeCell(cellIndex: Int, stateCell: Int) {

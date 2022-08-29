@@ -11,9 +11,7 @@ class FragmentLocalGame: FragmentGame() {
         val state = engine.getState()
         val winner = state.getWinner()
         if (winner != null) onWinner(winner)
-        else if (engine.isGameOver()) {
-            onGameOver()
-        }
+        else if (engine.isGameOver()) onGameOver()
         else {
             engine.getPlayer1().also {
                 renderPlayer1(it)
