@@ -5,10 +5,9 @@ import ru.gorbunova.tictactoe.gameLogic.IEngine
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
 
 class NetworkPlayer(
-    private val name: String
+    private val user: User
 ): IPlayer {
 
-    private val user: User? = null
     override fun getActionType(): Int {
         TODO("Not yet implemented")
     }
@@ -18,7 +17,7 @@ class NetworkPlayer(
     }
 
     override fun setEngine(engine: IEngine) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onWin() {

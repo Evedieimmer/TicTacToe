@@ -1,10 +1,12 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
+import android.os.Bundle
+import android.view.View
 import ru.gorbunova.tictactoe.gameLogic.*
 import ru.gorbunova.tictactoe.gameLogic.IEngine
 import ru.gorbunova.tictactoe.gameLogic.localGame.LocalPlayer
 
-class FragmentLocalGame: FragmentGame() {
+class FragmentLocalGame: AFragmentGame() {
 
     private val listener: (IEngine) -> Unit = { engine ->
 

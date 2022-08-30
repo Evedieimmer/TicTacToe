@@ -17,7 +17,7 @@ import soft.eac.appmvptemplate.common.childViews
 import soft.eac.appmvptemplate.views.ABaseFragment
 
 
-abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
+abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     private val binding: FragmentGameBinding get() = getViewBinding()
     private var boardList = mutableListOf<Button>()
@@ -49,6 +49,10 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
         }
     }
 
+    open fun onError(throwable: Throwable) {
+
+    }
+
     abstract fun createEngine(): IEngine
 
     abstract fun createPlayers(engine: IEngine)
@@ -65,10 +69,14 @@ abstract class FragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
     }
 
     private fun createGame() {
-        createEngine().also {
-            it.initGame()
-            createPlayers(it)
-            resumeGame(it)
+        createEngine().also { engine ->
+            engine.initGame {
+                if (it != null) onError(it)
+                else {
+                    createPlayers(engine)
+                    resumeGame(engine)
+                }
+            }
         }
     }
 

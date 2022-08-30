@@ -66,4 +66,6 @@ class UserRepository {
         }
     }
 
+    fun getUser() = storage.getUser()
+
 }

@@ -107,8 +107,9 @@ class GameEngineLocal() : AEngine() {
     private var player1ready: IPlayer? = null
     private var player2ready: IPlayer? = null
 
-    override fun initGame() {
+    override fun initGame(call: (Throwable?) -> Unit) {
         gameState = GameState()
+        call(null)
     }
 
     override fun addPlayer(player: IPlayer) {

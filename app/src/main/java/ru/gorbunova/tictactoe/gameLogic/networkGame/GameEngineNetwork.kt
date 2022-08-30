@@ -3,7 +3,6 @@ package ru.gorbunova.tictactoe.gameLogic.networkGame
 import com.google.gson.Gson
 import eac.network.*
 import ru.gorbunova.tictactoe.App
-import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.AEngine
 import ru.gorbunova.tictactoe.gameLogic.IGameState
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
@@ -70,14 +69,18 @@ class GameEngineNetwork(
     private val sender = PackageSender() // отправитель
     private val receiver = PackageReceiver() //приемник
     private var connection: Connection? = null
+    private var localPlayer: IPlayer? = null
+
+    // Слушатель для команд от сервера
     private var listenerCallback: ((Command?) -> Unit)? = null
+    // Слушатель для асинхронных запросов
+    private var initGameCallback: ((Throwable?) -> Unit)? = null
 
     private val connectionListener: (Connection, ByteArray) -> Unit = { _, bytes ->
         val command = Command(bytes.decodeToString())
         println("$command")
 
         val callback = listenerCallback
-
         if (callback != null) {
 
             listenerCallback = null
@@ -90,8 +93,8 @@ class GameEngineNetwork(
 //                COMMAND_SUCCESS -> { //ждать списка доступных игр, если нет, то вновь подключиться
 //
 //                }
-                COMMAND_GAMES -> sendTypeOfGame()//выбрать игру и отправить ответ GAME:tic-tac-toe
-                COMMAND_RENDER -> onRender(gson.fromJson(command.data ?: throw IllegalStateException ("Не"), RemoteState::class.java))
+                COMMAND_GAMES -> onSelectGame()//выбрать игру и отправить ответ GAME:tic-tac-toe
+                COMMAND_RENDER -> onRender(gson.fromJson(command.data ?: throw IllegalStateException ("Не пришел рендер"), RemoteState::class.java))
                 else -> {
                     //обработать ошибку
                 }
@@ -99,7 +102,8 @@ class GameEngineNetwork(
         }
     }
 
-    override fun initGame() {
+    override fun initGame(call: (Throwable?) -> Unit) {
+        initGameCallback = call
         connection = TcpReconnect(ip, port, 10000L).apply {
 
             this
@@ -112,32 +116,22 @@ class GameEngineNetwork(
                 .setOnDisconnected<Connection> {
 
                 }
-                .setOnError<Connection> { connection, throwable ->
-
+                .setOnError<Connection> { _, throwable ->
+                    onInitGameCallback(throwable)
                     false
                 }
 
-//            sender.register(this)
+            sender.register(this)
             receiver.register(this, connectionListener)
         }
     }
 
     override fun addPlayer(player: IPlayer) {
-//        val players = checkGame().players
-//        if(players.any { it.userLogin != player.getName() }) {
-//            onAuthorization()
-//        }
-//        else {
-//            ready(player)
-//        }
-        
+        localPlayer = player
         player.setEngine(this)
-
     }
 
     override fun ready(player: IPlayer) {
-
-
         send(COMMAND_READY)
     }
 
@@ -166,9 +160,13 @@ class GameEngineNetwork(
 
     override fun endGame() {
         super.endGame()
-
-
         send(COMMAND_EXIT)
+        App.handler.postDelayed({
+            connection?.also {
+                connection = null
+                it.shutdown()
+            }
+        }, 1000)
     }
 
     override fun restart() {
@@ -186,12 +184,12 @@ class GameEngineNetwork(
         setListenerCallback { command ->
 
             if (command == null) {
-                tokenProvider.onError(IOException("Нет ответа"))
-            } else{
+                tokenProvider.onAuthError( this, IOException("Нет ответа"))
+            } else {
                 when (command.name) {
-                    COMMAND_SUCCESS -> {}
+                    COMMAND_SUCCESS -> { }
                     COMMAND_ERROR -> {
-                        tokenProvider.onError(IllegalStateException(command.data ?: "Error"))
+                        tokenProvider.onAuthError(this, IllegalStateException(command.data ?: "Error"))
                     }
                     else -> throw  IllegalStateException ("")
                 }
@@ -210,18 +208,31 @@ class GameEngineNetwork(
 
     private fun onRender(state: RemoteState) {
         renderGame = state
-        App.handler.post {
-            render()
-        }
+        //здесь заканчивается initGame!
     }
 
-    private fun sendTypeOfGame(){
+    private fun onSelectGame() {
+        setListenerCallback { command ->
+            if(command?.name == COMMAND_RENDER) {
+                onInitGameCallback()
+            } else {
+
+            }
+        }
         send(COMMAND_GAME, TYPE_OF_GAME)
     }
 
     private fun setListenerCallback(l: (Command?) -> Unit) {
         listenerCallback?.also { throw IllegalStateException("Нет ") }
         listenerCallback = l
+    }
+
+    private fun onInitGameCallback(throwable: Throwable? = null) {
+        throwable?.printStackTrace()
+        initGameCallback?.also {
+            initGameCallback = null
+            it.invoke(throwable)
+        }
     }
 
 //    private fun onListenerCallback(command: Command) {
