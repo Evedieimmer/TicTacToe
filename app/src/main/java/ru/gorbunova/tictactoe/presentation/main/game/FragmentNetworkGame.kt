@@ -6,7 +6,7 @@ import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.di.module.NetModule
 import ru.gorbunova.tictactoe.gameLogic.IEngine
 import ru.gorbunova.tictactoe.gameLogic.networkGame.GameEngineNetwork
-import ru.gorbunova.tictactoe.gameLogic.networkGame.NetworkPlayer
+import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import javax.inject.Inject
 
 
@@ -24,7 +24,9 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
     }
 
     private val listener: (IEngine) -> Unit = { engine ->
-//        TODO("Not yet implemented")
+
+        val state = engine.getState()
+
 
     }
 
@@ -35,13 +37,17 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
     )
 
     override fun createPlayers(engine: IEngine) {
-
         presenter.createPlayers(engine)
+    }
+
+    override fun isPlayerReady(engine: IEngine): Boolean {
+        return engine.getCurrentPlayer()?.isReady() ?: false
     }
 
     override fun provideListener() = listener
 
     override fun goToAuth() {
-//        TODO("Not yet implemented")
+        (activity as? INavigateRouterMain)?.goToAuthScreen()
     }
+
 }

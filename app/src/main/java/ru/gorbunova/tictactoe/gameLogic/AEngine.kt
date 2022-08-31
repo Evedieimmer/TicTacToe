@@ -24,13 +24,9 @@ abstract class AEngine: IEngine {
         listeners.clear()
     }
 
-    override fun restart() {
-    TODO("Not yet implemented")
-    }
-
     override fun isGameOver() = gameState?.isGameOver() ?: false
 
-    fun render() {
+    open fun render() {
         listeners.onEach { it.invoke(this) }
     }
 

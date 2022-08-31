@@ -30,10 +30,24 @@ class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        btnOnline.setOnClickListener {
+            activity?.let {
+                if (it is INavigateRouterMain)
+                    it.showNetworkGame()
+            }
+        }
+
         btnWithFriend.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
-                    it.showGame()
+                    it.showLocalGame()
+            }
+        }
+
+        btnWithBot.setOnClickListener {
+            activity?.let {
+                if (it is INavigateRouterMain)
+                    it.showBotGame()
             }
         }
 

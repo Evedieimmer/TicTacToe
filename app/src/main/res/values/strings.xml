@@ -21,4 +21,5 @@
     <string name="error_login_password">Логин или пароль не введен</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>
     <string name="who_turn">Ход игрока:</string>
+    <string name="ready">Я готов!</string>
 </resources>

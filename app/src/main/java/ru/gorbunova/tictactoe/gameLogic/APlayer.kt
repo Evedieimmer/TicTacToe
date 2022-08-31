@@ -33,4 +33,10 @@ abstract class APlayer: IPlayer {
     override fun getScore() = score
 
     private fun getEngine() = gameEngine ?: throw IllegalStateException("Игрок не добавлен в игру")
+
+    override fun getId(): Int = 0
+
+    override fun isOnline(): Boolean = true
+
+    override fun isReady(): Boolean = false
 }

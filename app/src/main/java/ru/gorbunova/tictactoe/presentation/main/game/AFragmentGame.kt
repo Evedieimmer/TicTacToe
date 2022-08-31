@@ -1,5 +1,7 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -14,10 +16,28 @@ import ru.gorbunova.tictactoe.gameLogic.IPlayer
 import ru.gorbunova.tictactoe.gameLogic.ServiceGame
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import soft.eac.appmvptemplate.common.childViews
+import soft.eac.appmvptemplate.common.visible
 import soft.eac.appmvptemplate.views.ABaseFragment
 
 
 abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
+
+    private val baseListener: (IEngine) -> Unit = { engine ->
+
+        val state = engine.getState()
+        val winner = state.getWinner()
+        if (winner != null) onWinner(winner)
+        else if (engine.isGameOver()) onGameOver()
+        else {
+            engine.getPlayer1().also {
+                renderPlayer1(it)
+            }
+            engine.getPlayer2()?.also {
+                renderPlayer2(it)
+            }
+        }
+        renderCells(state)
+    }
 
     private val binding: FragmentGameBinding get() = getViewBinding()
     private var boardList = mutableListOf<Button>()
@@ -32,7 +52,10 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        ServiceGame.engine?.removeListener(provideListener())
+        ServiceGame.engine?.also { engine ->
+            engine.removeListener(baseListener)
+            provideListener()?.also { engine.removeListener(it) }
+        }
     }
 
     fun renderPlayer1(player: IPlayer) = renderPlayer(binding.llPlayer1, player)
@@ -57,7 +80,15 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     abstract fun createPlayers(engine: IEngine)
 
-    abstract fun provideListener(): (IEngine) -> Unit
+    abstract fun  isPlayerReady(engine: IEngine) : Boolean
+
+//    private fun isPlayerReady(engine: IEngine): Boolean {
+//        val isReady1player = engine.getPlayer1().isReady()
+//        val isReady2player = engine.getPlayer2()?.isReady() ?: false
+//        return isReady1player && isReady2player
+//    }
+
+    open fun provideListener(): ((IEngine) -> Unit)? = null
 
     private fun endGame() {
         ServiceGame.endGame()
@@ -93,14 +124,19 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
     }
 
     private fun resumeGame(engine: IEngine) {
+        //игроки готовы? Если нет, то показать кнопку
+        //кнопка нажата - возвращаемся сюда
+        showReadyBtn(engine)
         initBoard(engine)
-        engine.addListener(provideListener())
+        engine.addListener(baseListener)
+        provideListener()?.also { engine.addListener(it) }
         engine.addListener {
             binding.score.text = "${engine.getCurrentPlayer()?.getActionType() ?: -1}"
             binding.scoreNum.text =
                 "${engine.getPlayer1().getScore()} | ${engine.getPlayer2()?.getScore() ?: -1}"
         }
     }
+
 
 //    private fun getTextTurn(engine: IEngine): String {
 //         when (engine.getCurrentPlayer()?.getActionType() ?: -1) {
@@ -110,10 +146,23 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 //        return "Error"
 //    }
 
+    private fun showReadyBtn(engine: IEngine) {
+        if (isPlayerReady(engine)) {
+            resumeGame(engine)
+        } else {
+            binding.btnReady.also {
+                it.visible(true)
+                it.setOnClickListener {
+                    toReady()
+                }
+            }
+        }
+    }
 
     private fun renderPlayer(view: LinearLayout, player: IPlayer) {
         view.childViews(TextView::class.java)[0].text =
             "${player.getName()} ${player.getActionType()}"
+        view.background = if (player.isOnline()) ColorDrawable(Color.GREEN) else ColorDrawable(Color.RED)
     }
 
     private fun changeCell(cellIndex: Int, stateCell: Int) {

@@ -1,47 +1,27 @@
 package ru.gorbunova.tictactoe.gameLogic.networkGame
 
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
-import ru.gorbunova.tictactoe.gameLogic.IEngine
-import ru.gorbunova.tictactoe.gameLogic.IPlayer
+import ru.gorbunova.tictactoe.gameLogic.APlayer
+import ru.gorbunova.tictactoe.gameLogic.IReadyPlayer
 
 class NetworkPlayer(
     private val user: User
-): IPlayer {
+): APlayer(), IReadyPlayer {
 
-    override fun getActionType(): Int {
-        TODO("Not yet implemented")
-    }
+    private var ready: Boolean = false
 
-    override fun setActionType(value: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun getId(): Int = user.id
 
-    override fun setEngine(engine: IEngine) {
-
-    }
-
-    override fun onWin() {
-        TODO("Not yet implemented")
-    }
+    override fun getName(): String = user.login
 
     override fun ready() {
-        TODO("Not yet implemented")
+        ready = true
+        super.ready()
     }
 
-    override fun executeMove(indexCell: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun isReady(): Boolean = ready
 
-    override fun getScore(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun getName(): String {
-        TODO("Not yet implemented")
-    }
-
-    fun GetPlayerToken(): String{
-
-        return ""
+    override fun setReady(value: Boolean) {
+        ready = value
     }
 }

@@ -19,8 +19,7 @@ object ServiceGame{
     }
 
     fun restartGame() {
-        val engine = this.engine ?: return
-        engine.restart()
+        engine?.restart()
     }
 
     fun createLocalGame() = GameEngineLocal().apply {

@@ -6,6 +6,7 @@ import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.gameLogic.AEngine
 import ru.gorbunova.tictactoe.gameLogic.IGameState
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
+import ru.gorbunova.tictactoe.gameLogic.IReadyPlayer
 import java.io.IOException
 
 class GameEngineNetwork(
@@ -65,7 +66,7 @@ class GameEngineNetwork(
         }
     }
 
-    private var renderGame: RemoteState? = null
+    private var remoteState: RemoteState? = null
     private val sender = PackageSender() // отправитель
     private val receiver = PackageReceiver() //приемник
     private var connection: Connection? = null
@@ -89,10 +90,6 @@ class GameEngineNetwork(
         } else {
             when (command.name) {
                 COMMAND_AUTHORIZATION -> onAuthorization()
-//                COMMAND_ERROR -> onErrorAuthorization() //пройти заново авторизацию
-//                COMMAND_SUCCESS -> { //ждать списка доступных игр, если нет, то вновь подключиться
-//
-//                }
                 COMMAND_GAMES -> onSelectGame()//выбрать игру и отправить ответ GAME:tic-tac-toe
                 COMMAND_RENDER -> onRender(gson.fromJson(command.data ?: throw IllegalStateException ("Не пришел рендер"), RemoteState::class.java))
                 else -> {
@@ -135,27 +132,28 @@ class GameEngineNetwork(
         send(COMMAND_READY)
     }
 
-    override fun executeMove(player: IPlayer, indexCell: Int) { //"CELL:[0-8]"
-
-
-        val cells = checkGame().game
-        send("$COMMAND_CELL : ${cells.toString()}")
+    override fun executeMove(player: IPlayer, indexCell: Int) {
+        send("$COMMAND_CELL : $indexCell")
     }
 
-    override fun getState(): IGameState {
-        TODO("Not yet implemented")
-    }
+    override fun getState(): IGameState = remoteState ?: throw IllegalStateException("Error")
 
     override fun getPlayer1(): IPlayer {
-        TODO("Not yet implemented")
+        val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
+        val remotePlayer = checkState().players.firstOrNull() ?: throw IllegalStateException("error")
+        return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else remotePlayer
     }
 
     override fun getPlayer2(): IPlayer? {
-        TODO("Not yet implemented")
+        val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
+        val remotePlayer = checkState().players.lastOrNull() ?: return null
+        return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else remotePlayer
     }
 
     override fun getCurrentPlayer(): IPlayer? {
-        TODO("Not yet implemented")
+        val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
+        val remotePlayer = checkState().players.firstOrNull { it.action } ?: return null
+        return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else null
     }
 
     override fun endGame() {
@@ -170,14 +168,17 @@ class GameEngineNetwork(
     }
 
     override fun restart() {
-        TODO("Not yet implemented")
+        (localPlayer as? IReadyPlayer)?.setReady(false)
+        render()
     }
 
-    override fun isGameOver(): Boolean {
-        TODO("Not yet implemented")
+    override fun isGameOver(): Boolean = checkState().isGameOver()
+
+    override fun render() {
+        App.handler.post { super.render() }
     }
 
-    private fun checkGame() = renderGame ?: throw IllegalStateException("Нет игры")
+    private fun checkState() = remoteState ?: throw IllegalStateException("Нет игры")
 
     private fun onAuthorization() {
 
@@ -207,14 +208,14 @@ class GameEngineNetwork(
     }
 
     private fun onRender(state: RemoteState) {
-        renderGame = state
-        //здесь заканчивается initGame!
+        remoteState = state
+        render()
     }
 
     private fun onSelectGame() {
         setListenerCallback { command ->
             if(command?.name == COMMAND_RENDER) {
-                onInitGameCallback()
+                onInitGameCallback()  //здесь заканчивается initGame!
             } else {
 
             }

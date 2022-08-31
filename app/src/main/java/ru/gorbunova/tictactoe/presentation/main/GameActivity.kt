@@ -7,7 +7,9 @@ import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import ru.gorbunova.tictactoe.presentation.auth.AuthActivity
+import ru.gorbunova.tictactoe.presentation.main.game.FragmentBotGame
 import ru.gorbunova.tictactoe.presentation.main.game.FragmentLocalGame
+import ru.gorbunova.tictactoe.presentation.main.game.FragmentNetworkGame
 import ru.gorbunova.tictactoe.presentation.main.menu.FragmentMenu
 import ru.gorbunova.tictactoe.presentation.main.records.FragmentRecordsTable
 import soft.eac.appmvptemplate.views.ABaseActivity
@@ -44,8 +46,16 @@ class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INav
         showMenu()
     }
 
-    override fun showGame() {
-        replace(FragmentLocalGame(), "Game")
+    override fun showLocalGame() {
+        replace(FragmentLocalGame(), "GameLocal")
+    }
+
+    override fun showNetworkGame() {
+        replace(FragmentNetworkGame(), "NetGame")
+    }
+
+    override fun showBotGame() {
+//        replace(FragmentBotGame(), "BotGame")
     }
 
     override fun showMenu() {

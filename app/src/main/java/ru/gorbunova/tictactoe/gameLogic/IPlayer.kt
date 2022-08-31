@@ -12,6 +12,9 @@ interface IPlayer {
     fun ready()
     fun executeMove(indexCell: Int)
     fun getScore(): Int
-    fun getName(): String
 
+    fun getId() : Int
+    fun getName(): String
+    fun isOnline() : Boolean
+    fun isReady(): Boolean
 }

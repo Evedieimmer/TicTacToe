@@ -25,6 +25,7 @@ class NetworkGamePresenter @Inject constructor(
         }
         NetworkPlayer(user).apply {
             engine.addPlayer(this)
+//            this.ready() //ТАК НЕЛЬЗЯЯ нужно запросить готовность
         }
     }
 
@@ -33,7 +34,6 @@ class NetworkGamePresenter @Inject constructor(
     }
 
     override fun onAuthError(engine: IEngine, e: Exception) {
-        //TODO: завершить игру и выкинуть пользователя на экран авторизации
         engine.endGame()
         viewState.goToAuth()
     }

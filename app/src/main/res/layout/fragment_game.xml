@@ -92,6 +92,16 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnReady"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="83dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/button_color"
+        android:text="@string/ready"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/whoTurn"
         android:layout_marginTop="10dp"
@@ -213,7 +223,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:text="@string/exit"
         style="?attr/materialButtonOutlinedStyle"/>
 </LinearLayout>
