@@ -173,7 +173,9 @@ class GameEngineLocal() : AEngine() {
 
     override fun getPlayer2(): IPlayer? = checkState().player2
 
-    override fun getCurrentPlayer() = checkState().currentPlayer
+    override fun getActionPlayer() = checkState().currentPlayer
+
+    override fun getLocalPlayer(): IPlayer? = null
 
     override fun endGame() {
         super.endGame()

@@ -6,7 +6,7 @@ import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.gameLogic.AEngine
 import ru.gorbunova.tictactoe.gameLogic.IGameState
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
-import ru.gorbunova.tictactoe.gameLogic.IReadyPlayer
+import ru.gorbunova.tictactoe.gameLogic.INetworkPlayer
 import java.io.IOException
 
 class GameEngineNetwork(
@@ -54,7 +54,7 @@ class GameEngineNetwork(
                 return
             }
 
-            name = string.substring(index)
+            name = string.substring(0, index)
             if (index < string.length - 1)
                 data = string.substring(index + 1, string.length)
         }
@@ -79,7 +79,7 @@ class GameEngineNetwork(
 
     private val connectionListener: (Connection, ByteArray) -> Unit = { _, bytes ->
         val command = Command(bytes.decodeToString())
-        println("$command")
+        println("COMMAND: $command")
 
         val callback = listenerCallback
         if (callback != null) {
@@ -91,7 +91,8 @@ class GameEngineNetwork(
             when (command.name) {
                 COMMAND_AUTHORIZATION -> onAuthorization()
                 COMMAND_GAMES -> onSelectGame()//выбрать игру и отправить ответ GAME:tic-tac-toe
-                COMMAND_RENDER -> onRender(gson.fromJson(command.data ?: throw IllegalStateException ("Не пришел рендер"), RemoteState::class.java))
+                COMMAND_RENDER -> onRender(gson.fromJson(command.data
+                    ?: throw IllegalStateException ("Не пришел рендер"), RemoteState::class.java))
                 else -> {
                     //обработать ошибку
                 }
@@ -126,6 +127,7 @@ class GameEngineNetwork(
     override fun addPlayer(player: IPlayer) {
         localPlayer = player
         player.setEngine(this)
+        render()
     }
 
     override fun ready(player: IPlayer) {
@@ -150,7 +152,7 @@ class GameEngineNetwork(
         return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else remotePlayer
     }
 
-    override fun getCurrentPlayer(): IPlayer? {
+    override fun getActionPlayer(): IPlayer? {
         val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
         val remotePlayer = checkState().players.firstOrNull { it.action } ?: return null
         return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else null
@@ -168,7 +170,7 @@ class GameEngineNetwork(
     }
 
     override fun restart() {
-        (localPlayer as? IReadyPlayer)?.setReady(false)
+        (localPlayer as? INetworkPlayer)?.setReady(false)
         render()
     }
 
@@ -178,7 +180,15 @@ class GameEngineNetwork(
         App.handler.post { super.render() }
     }
 
+    override fun getLocalPlayer(): IPlayer? = localPlayer
+
     private fun checkState() = remoteState ?: throw IllegalStateException("Нет игры")
+
+//    private fun getPlayerReady(): Boolean {
+//        val currentUser = getCurrentPlayer()
+//        val remotePlayer = checkState().players.firstOrNull { it.getId() == currentUser?.getId() }
+//        return remotePlayer?.isReady() ?: false
+//    }
 
     private fun onAuthorization() {
 
@@ -192,7 +202,7 @@ class GameEngineNetwork(
                     COMMAND_ERROR -> {
                         tokenProvider.onAuthError(this, IllegalStateException(command.data ?: "Error"))
                     }
-                    else -> throw  IllegalStateException ("")
+                    else -> throw  IllegalStateException ("Wrong: ${command.name}")
                 }
             }
         }
@@ -209,7 +219,16 @@ class GameEngineNetwork(
 
     private fun onRender(state: RemoteState) {
         remoteState = state
+        onInitGameCallback()
+        getLocalPlayer(state)?.also {
+            (localPlayer as? INetworkPlayer)?.setReady(it.isReady())
+        }
         render()
+    }
+
+    private fun getLocalPlayer(state: RemoteState): IPlayer? {
+        val localPlayerId = this.localPlayer?.getId() ?: throw IllegalStateException("error")
+        return state.players.firstOrNull { it.getId() == localPlayerId }
     }
 
     private fun onSelectGame() {
@@ -217,7 +236,7 @@ class GameEngineNetwork(
             if(command?.name == COMMAND_RENDER) {
                 onInitGameCallback()  //здесь заканчивается initGame!
             } else {
-
+                // todo
             }
         }
         send(COMMAND_GAME, TYPE_OF_GAME)

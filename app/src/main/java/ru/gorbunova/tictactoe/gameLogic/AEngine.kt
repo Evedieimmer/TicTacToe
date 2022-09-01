@@ -8,26 +8,26 @@ abstract class AEngine: IEngine {
     private val listeners = mutableListOf<(IEngine) -> Unit>()
 
     @CallSuper
-    override fun addListener(l: (IEngine) -> Unit) {
+    override fun addListener(l: (IEngine) -> Unit) {synchronized(listeners) {
         if (!listeners.contains(l))
             listeners.add(l)
         render()
-    }
+    }}
 
     @CallSuper
-    override fun removeListener(l: (IEngine) -> Unit) {
+    override fun removeListener(l: (IEngine) -> Unit) {synchronized(listeners) {
         listeners.remove(l)
-    }
+    }}
 
     @CallSuper //нужна для того, чтобы обязательно был вызов из родительского метода
-    override fun endGame() {
+    override fun endGame() = synchronized(listeners) {
         listeners.clear()
     }
 
     override fun isGameOver() = gameState?.isGameOver() ?: false
 
-    open fun render() {
+    open fun render() {synchronized(listeners) {
         listeners.onEach { it.invoke(this) }
-    }
+    }}
 
  }

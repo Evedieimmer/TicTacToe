@@ -5,6 +5,7 @@ import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.di.module.NetModule
 import ru.gorbunova.tictactoe.gameLogic.IEngine
+import ru.gorbunova.tictactoe.gameLogic.ServiceGame
 import ru.gorbunova.tictactoe.gameLogic.networkGame.GameEngineNetwork
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import javax.inject.Inject
@@ -25,8 +26,6 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
 
     private val listener: (IEngine) -> Unit = { engine ->
 
-        val state = engine.getState()
-
 
     }
 
@@ -40,9 +39,9 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
         presenter.createPlayers(engine)
     }
 
-    override fun isPlayerReady(engine: IEngine): Boolean {
-        return engine.getCurrentPlayer()?.isReady() ?: false
-    }
+//    override fun isPlayerReady(engine: IEngine): Boolean {
+//        return engine.getCurrentPlayer()?.isReady() ?: false
+//    }
 
     override fun provideListener() = listener
 

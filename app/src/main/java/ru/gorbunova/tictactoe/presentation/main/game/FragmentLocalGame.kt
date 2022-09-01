@@ -34,13 +34,13 @@ class FragmentLocalGame: AFragmentGame() {
         val player2 = LocalPlayer("Игрок 2")
         engine.addPlayer(player1)
         engine.addPlayer(player2)
-//        player1.ready()
-//        player2.ready()
+        player1.ready()
+        player2.ready()
     }
 
-    override fun isPlayerReady(engine: IEngine): Boolean {
-        engine.getPlayer1().ready()
-        engine.getPlayer2()?.ready()
-        return true
-    }
+//    override fun isPlayerReady(engine: IEngine): Boolean {
+//        engine.getPlayer1().ready()
+//        engine.getPlayer2()?.ready()
+//        return true
+//    }
 }

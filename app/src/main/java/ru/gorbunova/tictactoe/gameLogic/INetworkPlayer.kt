@@ -1,5 +1,5 @@
 package ru.gorbunova.tictactoe.gameLogic
 
-internal interface IReadyPlayer {
+internal interface INetworkPlayer {
      fun setReady(value: Boolean)
 }

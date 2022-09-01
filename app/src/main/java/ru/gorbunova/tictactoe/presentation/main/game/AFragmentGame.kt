@@ -35,6 +35,9 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
             engine.getPlayer2()?.also {
                 renderPlayer2(it)
             }
+            engine.getLocalPlayer()?.also {
+                binding.btnReady.visible(!it.isReady())
+            }
         }
         renderCells(state)
     }
@@ -45,6 +48,13 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         startGame()
+
+        binding.btnReady.setOnClickListener {
+            ServiceGame.engine?.also { engine ->
+                engine.getLocalPlayer()?.ready() ?: toast("Что-то пошло не так")
+            }
+        }
+
         binding.btnQuitTheGame.setOnClickListener {
             endGame()
         }
@@ -73,14 +83,14 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
     }
 
     open fun onError(throwable: Throwable) {
-
+        throwable.printStackTrace()
     }
 
     abstract fun createEngine(): IEngine
 
     abstract fun createPlayers(engine: IEngine)
 
-    abstract fun  isPlayerReady(engine: IEngine) : Boolean
+//    abstract fun  isPlayerReady(engine: IEngine) : Boolean
 
 //    private fun isPlayerReady(engine: IEngine): Boolean {
 //        val isReady1player = engine.getPlayer1().isReady()
@@ -101,6 +111,7 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     private fun createGame() {
         createEngine().also { engine ->
+            ServiceGame.engine = engine
             engine.initGame {
                 if (it != null) onError(it)
                 else {
@@ -124,45 +135,28 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
     }
 
     private fun resumeGame(engine: IEngine) {
-        //игроки готовы? Если нет, то показать кнопку
-        //кнопка нажата - возвращаемся сюда
-        showReadyBtn(engine)
         initBoard(engine)
         engine.addListener(baseListener)
         provideListener()?.also { engine.addListener(it) }
         engine.addListener {
-            binding.score.text = "${engine.getCurrentPlayer()?.getActionType() ?: -1}"
+            binding.score.text = "${engine.getActionPlayer()?.getActionType() ?: -1}"
             binding.scoreNum.text =
                 "${engine.getPlayer1().getScore()} | ${engine.getPlayer2()?.getScore() ?: -1}"
         }
     }
 
-
-//    private fun getTextTurn(engine: IEngine): String {
-//         when (engine.getCurrentPlayer()?.getActionType() ?: -1) {
-//            0 -> return "нолик"
-//            1 -> return "крестик"
+//    private fun getTextTurn(actionType: Int): String {
+//        return when (actionType) {
+//            0 -> "нолик"
+//            1 -> "крестик"
+//             else ->"Error"
 //        }
-//        return "Error"
 //    }
-
-    private fun showReadyBtn(engine: IEngine) {
-        if (isPlayerReady(engine)) {
-            resumeGame(engine)
-        } else {
-            binding.btnReady.also {
-                it.visible(true)
-                it.setOnClickListener {
-                    toReady()
-                }
-            }
-        }
-    }
 
     private fun renderPlayer(view: LinearLayout, player: IPlayer) {
         view.childViews(TextView::class.java)[0].text =
             "${player.getName()} ${player.getActionType()}"
-        view.background = if (player.isOnline()) ColorDrawable(Color.GREEN) else ColorDrawable(Color.RED)
+        view.background = if (player.isOnline() && player.isReady()) ColorDrawable(Color.GREEN) else ColorDrawable(Color.RED)
     }
 
     private fun changeCell(cellIndex: Int, stateCell: Int) {
@@ -172,7 +166,6 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
             IGameState.GAME_CELL_VALUE_CROSS -> R.drawable.ic_cross
             else -> R.color.white
         }
-//        btn.setBackgroundResource(drawableId)
         btn.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0)
         btn.isClickable = stateCell == IGameState.GAME_CELL_VALUE_NONE
     }
@@ -192,7 +185,7 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
         boardList.forEachIndexed { index, button ->
             button.setOnClickListener {
-                engine.getCurrentPlayer()?.executeMove(index) ?: toast("Player not found")
+                engine.getActionPlayer()?.executeMove(index) ?: toast("Player not found")
             }
         }
     }

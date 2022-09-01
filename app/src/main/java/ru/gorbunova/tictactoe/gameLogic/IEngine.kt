@@ -13,7 +13,8 @@ interface IEngine {
     fun getState(): IGameState
     fun getPlayer1(): IPlayer
     fun getPlayer2(): IPlayer?
-    fun getCurrentPlayer(): IPlayer?
+    fun getActionPlayer(): IPlayer?
+    fun getLocalPlayer(): IPlayer?
     fun isGameOver(): Boolean
 
     fun endGame()

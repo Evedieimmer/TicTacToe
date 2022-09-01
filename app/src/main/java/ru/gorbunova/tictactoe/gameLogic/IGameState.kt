@@ -2,9 +2,9 @@ package ru.gorbunova.tictactoe.gameLogic
 
 interface IGameState {
     companion object {
-        const val STATE_WAITING_PLAYERS_READY = 0
-        const val STATE_GAME_PROCESSING = 1
-        const val STATE_GAME_END = 2
+        const val STATE_WAITING_PLAYERS_READY = 1
+        const val STATE_GAME_PROCESSING = 2
+        const val STATE_GAME_END = 3
 
         const val GAME_CELL_VALUE_NONE = -1
         const val GAME_CELL_VALUE_ZERO = 0
