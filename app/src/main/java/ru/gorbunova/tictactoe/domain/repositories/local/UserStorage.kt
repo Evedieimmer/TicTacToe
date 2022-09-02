@@ -66,6 +66,7 @@ class UserStorage {
             realm.executeTransaction {
                 it.delete(UserRealm::class.java)
                 it.delete(TokenRealm::class.java)
+                token = null
             }
         }
     }

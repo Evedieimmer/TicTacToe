@@ -24,4 +24,9 @@ class MenuPresenter : ABasePresenter<IMenuView> {
             viewState.goToAuthScreen()
         })
     }
+
+    fun getUserName(): String {
+        val user = userRepository.getUser() ?: throw IllegalStateException("User not find")
+        return user.login
+    }
 }

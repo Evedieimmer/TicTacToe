@@ -24,11 +24,6 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
         DaggerAppComponent.create().inject(this)
     }
 
-    private val listener: (IEngine) -> Unit = { engine ->
-
-
-    }
-
     override fun createEngine(): IEngine = GameEngineNetwork(
         NetModule.DOMAIN,
         NetModule.GAME_SERVICE_PORT,
@@ -43,10 +38,12 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
 //        return engine.getCurrentPlayer()?.isReady() ?: false
 //    }
 
-    override fun provideListener() = listener
-
     override fun goToAuth() {
         (activity as? INavigateRouterMain)?.goToAuthScreen()
+    }
+
+    override fun goToMenu() {
+        (activity as? INavigateRouterMain)?.showMenu()
     }
 
 }

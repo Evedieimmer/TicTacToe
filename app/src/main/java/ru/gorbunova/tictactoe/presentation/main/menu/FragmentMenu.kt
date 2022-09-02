@@ -18,6 +18,8 @@ class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
     @InjectPresenter
     lateinit var presenter: MenuPresenter
 
+//    private val binding: FragmentMenuBinding get() = getViewBinding()
+
     @ProvidePresenter
     fun providePresenter() = presenter
 
@@ -29,6 +31,9 @@ class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val name = presenter.getUserName()
+        userName.text = "$name"
 
         btnOnline.setOnClickListener {
             activity?.let {

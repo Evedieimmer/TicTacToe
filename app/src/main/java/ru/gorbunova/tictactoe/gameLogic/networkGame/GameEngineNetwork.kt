@@ -67,6 +67,9 @@ class GameEngineNetwork(
     }
 
     private var remoteState: RemoteState? = null
+        set(value) {
+            field = value
+        }
     private val sender = PackageSender() // отправитель
     private val receiver = PackageReceiver() //приемник
     private var connection: Connection? = null
@@ -135,7 +138,7 @@ class GameEngineNetwork(
     }
 
     override fun executeMove(player: IPlayer, indexCell: Int) {
-        send("$COMMAND_CELL : $indexCell")
+        send(COMMAND_CELL, "$indexCell")
     }
 
     override fun getState(): IGameState = remoteState ?: throw IllegalStateException("Error")
@@ -148,8 +151,11 @@ class GameEngineNetwork(
 
     override fun getPlayer2(): IPlayer? {
         val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
-        val remotePlayer = checkState().players.lastOrNull() ?: return null
-        return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else remotePlayer
+        val players = checkState().players
+        return if (players.size > 1) {
+            val remotePlayer = players.lastOrNull() ?: return null
+            if (remotePlayer.getId() == localPlayer.getId()) localPlayer else remotePlayer
+        } else null
     }
 
     override fun getActionPlayer(): IPlayer? {
@@ -160,17 +166,23 @@ class GameEngineNetwork(
 
     override fun endGame() {
         super.endGame()
-        send(COMMAND_EXIT)
-        App.handler.postDelayed({
-            connection?.also {
-                connection = null
+
+        connection?.also {
+            connection = null
+            receiver.unregister()
+            it.setOnSuccess<Connection> { _ ->
+                sender.unregister()
                 it.shutdown()
             }
-        }, 1000)
+            App.handler.postDelayed({ it.shutdown() }, 5000)
+        }
+
+        send(COMMAND_EXIT)
     }
 
     override fun restart() {
         (localPlayer as? INetworkPlayer)?.setReady(false)
+        localPlayer?.ready()
         render()
     }
 
@@ -210,7 +222,7 @@ class GameEngineNetwork(
     }
 
     private fun send(command: Command) {
-        sender.send("$command")
+        sender.send("$command".also { println("$it") })
     }
 
     private fun send(name: String, data : String? = null) {

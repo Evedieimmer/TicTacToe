@@ -38,5 +38,5 @@ abstract class APlayer: IPlayer {
 
     override fun isOnline(): Boolean = true
 
-    override fun isReady(): Boolean = false
+    override fun isReady(): Boolean = true
 }

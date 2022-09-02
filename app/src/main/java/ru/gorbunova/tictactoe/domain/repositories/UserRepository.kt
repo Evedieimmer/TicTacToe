@@ -53,6 +53,7 @@ class UserRepository {
         }
         return null
     }
+
     fun getToken() = storage.getToken()
 
     fun hasToken() = storage.getToken() != null

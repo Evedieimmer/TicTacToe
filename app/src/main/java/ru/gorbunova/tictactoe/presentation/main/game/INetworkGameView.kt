@@ -8,4 +8,5 @@ import ru.gorbunova.tictactoe.gameLogic.networkGame.NetworkPlayer
 @StateStrategyType(SkipStrategy::class)
 interface INetworkGameView : MvpView {
     fun goToAuth()
+    fun goToMenu()
 }

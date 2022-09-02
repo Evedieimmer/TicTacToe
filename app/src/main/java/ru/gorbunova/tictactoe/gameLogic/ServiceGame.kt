@@ -13,9 +13,10 @@ object ServiceGame{
         }
 
     fun endGame() {
-        val engine = this.engine ?: return
-        engine.endGame()
-        this.engine = null
+        engine?.also {
+            engine = null
+            it.endGame()
+        }
     }
 
     fun restartGame() {

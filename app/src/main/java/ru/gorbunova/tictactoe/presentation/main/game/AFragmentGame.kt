@@ -1,5 +1,6 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
+import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -190,7 +191,10 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
         }
     }
 
+    private var dialog: Dialog? = null
     private fun showDialog(message: String) {
+        if (dialog != null)
+            return
         activity?.let {
             AlertDialog.Builder(it)
                 .setTitle("Игра окончена")
@@ -202,7 +206,10 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
                 .setNegativeButton("Выход") { _, _ ->
                     endGame()
                 }
-                .create()
+                .setOnDismissListener {
+                    dialog = null
+                }
+                .create().apply { dialog = this }
                 .show()
         }
     }
