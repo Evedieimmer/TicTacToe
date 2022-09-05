@@ -30,8 +30,8 @@ class FragmentLocalGame: AFragmentGame() {
     override fun createEngine() = ServiceGame.createLocalGame()
 
     override fun createPlayers(engine: IEngine) {
-        val player1 = LocalPlayer("Игрок 1")
-        val player2 = LocalPlayer("Игрок 2")
+        val player1 = LocalPlayer("Лама")
+        val player2 = LocalPlayer("Панда")
         engine.addPlayer(player1)
         engine.addPlayer(player2)
         player1.ready()

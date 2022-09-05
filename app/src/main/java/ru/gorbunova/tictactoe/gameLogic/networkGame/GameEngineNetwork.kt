@@ -8,6 +8,7 @@ import ru.gorbunova.tictactoe.gameLogic.IGameState
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
 import ru.gorbunova.tictactoe.gameLogic.INetworkPlayer
 import java.io.IOException
+import java.util.concurrent.atomic.AtomicBoolean
 
 class GameEngineNetwork(
     private val ip: String,
@@ -24,7 +25,6 @@ class GameEngineNetwork(
         private const val COMMAND_GAMES = "GAMES" //список игр с сервера
         private const val COMMAND_RENDER = "RENDER" // состояние игры
 
-
         //команды клиента (в ответе всегда приходит рендер/состояние игры)
         private const val COMMAND_GAME = "GAME" //отправка названия игры
         private const val COMMAND_READY = "READY" //готовность игрока
@@ -35,7 +35,6 @@ class GameEngineNetwork(
         private const val TYPE_OF_GAME = "tic-tac-toe"
 
         private val gson = Gson()
-
     }
 
     private class Command {
@@ -66,6 +65,7 @@ class GameEngineNetwork(
         }
     }
 
+    private val isExitGameFlag: AtomicBoolean = AtomicBoolean(false)
     private var remoteState: RemoteState? = null
         set(value) {
             field = value
@@ -94,13 +94,19 @@ class GameEngineNetwork(
             when (command.name) {
                 COMMAND_AUTHORIZATION -> onAuthorization()
                 COMMAND_GAMES -> onSelectGame()//выбрать игру и отправить ответ GAME:tic-tac-toe
-                COMMAND_RENDER -> onRender(gson.fromJson(command.data
-                    ?: throw IllegalStateException ("Не пришел рендер"), RemoteState::class.java))
+                COMMAND_RENDER -> onRender(getRemoveState(command))
                 else -> {
                     //обработать ошибку
                 }
             }
         }
+    }
+
+    private fun getRemoveState(command: Command): RemoteState {
+        if (command.name != COMMAND_RENDER)
+            throw IllegalArgumentException("")
+        return gson.fromJson(command.data
+            ?: throw IllegalStateException ("Не пришел рендер"), RemoteState::class.java)
     }
 
     override fun initGame(call: (Throwable?) -> Unit) {
@@ -174,10 +180,13 @@ class GameEngineNetwork(
                 sender.unregister()
                 it.shutdown()
             }
+            if (isExitGameFlag.get()) {
             App.handler.postDelayed({ it.shutdown() }, 5000)
+            }
         }
 
         send(COMMAND_EXIT)
+        isExitGameFlag.set(true)
     }
 
     override fun restart() {
@@ -231,7 +240,6 @@ class GameEngineNetwork(
 
     private fun onRender(state: RemoteState) {
         remoteState = state
-        onInitGameCallback()
         getLocalPlayer(state)?.also {
             (localPlayer as? INetworkPlayer)?.setReady(it.isReady())
         }
@@ -246,6 +254,7 @@ class GameEngineNetwork(
     private fun onSelectGame() {
         setListenerCallback { command ->
             if(command?.name == COMMAND_RENDER) {
+                remoteState = getRemoveState(command)
                 onInitGameCallback()  //здесь заканчивается initGame!
             } else {
                 // todo

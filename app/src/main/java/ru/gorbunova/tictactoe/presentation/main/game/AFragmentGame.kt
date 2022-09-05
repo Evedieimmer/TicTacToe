@@ -143,6 +143,7 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
             binding.score.text = "${engine.getActionPlayer()?.getActionType() ?: -1}"
             binding.scoreNum.text =
                 "${engine.getPlayer1().getScore()} | ${engine.getPlayer2()?.getScore() ?: -1}"
+            binding.whoTurn.text = "${engine.getActionPlayer()?.getName() ?: "ошибка"}"
         }
     }
 
