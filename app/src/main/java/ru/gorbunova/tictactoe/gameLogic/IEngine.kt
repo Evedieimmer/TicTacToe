@@ -11,7 +11,7 @@ interface IEngine {
 
     fun executeMove(player: IPlayer, indexCell: Int)
     fun getState(): IGameState
-    fun getPlayer1(): IPlayer
+    fun getPlayer1(): IPlayer?
     fun getPlayer2(): IPlayer?
     fun getActionPlayer(): IPlayer?
     fun getLocalPlayer(): IPlayer?

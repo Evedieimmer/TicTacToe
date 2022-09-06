@@ -26,8 +26,9 @@ abstract class AEngine: IEngine {
 
     override fun isGameOver() = gameState?.isGameOver() ?: false
 
-    open fun render() {synchronized(listeners) {
-        listeners.onEach { it.invoke(this) }
-    }}
-
+    open fun render() {
+        synchronized(listeners) {
+            listeners.onEach { it.invoke(this) }
+        }
+    }
  }

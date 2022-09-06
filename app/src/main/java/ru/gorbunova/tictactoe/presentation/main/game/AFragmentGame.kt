@@ -30,7 +30,7 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
         if (winner != null) onWinner(winner)
         else if (engine.isGameOver()) onGameOver()
         else {
-            engine.getPlayer1().also {
+            engine.getPlayer1()?.also {
                 renderPlayer1(it)
             }
             engine.getPlayer2()?.also {
@@ -91,14 +91,6 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     abstract fun createPlayers(engine: IEngine)
 
-//    abstract fun  isPlayerReady(engine: IEngine) : Boolean
-
-//    private fun isPlayerReady(engine: IEngine): Boolean {
-//        val isReady1player = engine.getPlayer1().isReady()
-//        val isReady2player = engine.getPlayer2()?.isReady() ?: false
-//        return isReady1player && isReady2player
-//    }
-
     open fun provideListener(): ((IEngine) -> Unit)? = null
 
     private fun endGame() {
@@ -142,8 +134,9 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
         engine.addListener {
             binding.score.text = "${engine.getActionPlayer()?.getActionType() ?: -1}"
             binding.scoreNum.text =
-                "${engine.getPlayer1().getScore()} | ${engine.getPlayer2()?.getScore() ?: -1}"
-            binding.whoTurn.text = "${engine.getActionPlayer()?.getName() ?: "ошибка"}"
+                "${engine.getPlayer1()?.getScore() ?: -1} | ${engine.getPlayer2()?.getScore() ?: -1}"
+//            binding.whoTurn.text = "${engine.getActionPlayer()?.getName() ?: "ошибка"}"
+            binding.whoTurn.visibility = if (engine.getActionPlayer() != null) View.VISIBLE else View.INVISIBLE
         }
     }
 

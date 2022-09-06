@@ -4,7 +4,7 @@ import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.APlayer
 import ru.gorbunova.tictactoe.gameLogic.INetworkPlayer
 
-class NetworkPlayer(
+open class NetworkPlayer(
     private val user: User
 ): APlayer(), INetworkPlayer {
 

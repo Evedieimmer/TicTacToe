@@ -20,6 +20,6 @@
     <string name="score">Счет</string>
     <string name="error_login_password">Логин или пароль не введен</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>
-    <string name="who_turn">Ходит:</string>
+    <string name="who_turn">Ваш ход</string>
     <string name="ready">Я готов!</string>
 </resources>

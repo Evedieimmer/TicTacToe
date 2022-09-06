@@ -14,14 +14,15 @@ class GameEngineNetwork(
     private val ip: String,
     private val port: Int,
     private val tokenProvider: ITokenProvider
-):  AEngine(){
+) : AEngine() {
 
     companion object {
 
         // Команды сервера
         private const val COMMAND_AUTHORIZATION = "AUTHORIZATION" //запрос на подключение к серверу
         private const val COMMAND_SUCCESS = "SUCCESS" //в случае удачной авторизации на сервере
-        private const val COMMAND_ERROR = "ERROR" // в случае неудачной авторизации -> нужно выкинуть пользователя на экран авторизации
+        private const val COMMAND_ERROR =
+            "ERROR" // в случае неудачной авторизации -> нужно выкинуть пользователя на экран авторизации
         private const val COMMAND_GAMES = "GAMES" //список игр с сервера
         private const val COMMAND_RENDER = "RENDER" // состояние игры
 
@@ -74,9 +75,11 @@ class GameEngineNetwork(
     private val receiver = PackageReceiver() //приемник
     private var connection: Connection? = null
     private var localPlayer: IPlayer? = null
+    private val playersIds = mutableListOf<Int>()
 
     // Слушатель для команд от сервера
     private var listenerCallback: ((Command?) -> Unit)? = null
+
     // Слушатель для асинхронных запросов
     private var initGameCallback: ((Throwable?) -> Unit)? = null
 
@@ -105,8 +108,10 @@ class GameEngineNetwork(
     private fun getRemoveState(command: Command): RemoteState {
         if (command.name != COMMAND_RENDER)
             throw IllegalArgumentException("")
-        return gson.fromJson(command.data
-            ?: throw IllegalStateException ("Не пришел рендер"), RemoteState::class.java)
+        return gson.fromJson(
+            command.data
+                ?: throw IllegalStateException("Не пришел рендер"), RemoteState::class.java
+        )
     }
 
     override fun initGame(call: (Throwable?) -> Unit) {
@@ -149,25 +154,34 @@ class GameEngineNetwork(
 
     override fun getState(): IGameState = remoteState ?: throw IllegalStateException("Error")
 
-    override fun getPlayer1(): IPlayer {
+    override fun getPlayer1(): IPlayer? {
+        if (playersIds.isEmpty())
+            return null
+
         val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
-        val remotePlayer = checkState().players.firstOrNull() ?: throw IllegalStateException("error")
-        return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else remotePlayer
+        return checkState().players.firstOrNull {
+            it.getId() == playersIds[0]
+        }?.let {
+            if (it.getId() == localPlayer.getId()) localPlayer else it
+        }
     }
 
     override fun getPlayer2(): IPlayer? {
+        if (playersIds.size < 2)
+            return null
+
         val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
-        val players = checkState().players
-        return if (players.size > 1) {
-            val remotePlayer = players.lastOrNull() ?: return null
-            if (remotePlayer.getId() == localPlayer.getId()) localPlayer else remotePlayer
-        } else null
+        return checkState().players.firstOrNull {
+            it.getId() == playersIds[1]
+        }?.let {
+            if (it.getId() == localPlayer.getId()) localPlayer else it
+        }
     }
 
     override fun getActionPlayer(): IPlayer? {
         val localPlayer = this.localPlayer ?: throw IllegalStateException("error")
         val remotePlayer = checkState().players.firstOrNull { it.action } ?: return null
-        return if(remotePlayer.getId() == localPlayer.getId()) localPlayer else null
+        return if (remotePlayer.getId() == localPlayer.getId()) localPlayer else null
     }
 
     override fun endGame() {
@@ -181,7 +195,7 @@ class GameEngineNetwork(
                 it.shutdown()
             }
             if (isExitGameFlag.get()) {
-            App.handler.postDelayed({ it.shutdown() }, 5000)
+                App.handler.postDelayed({ it.shutdown() }, 5000)
             }
         }
 
@@ -216,14 +230,17 @@ class GameEngineNetwork(
         setListenerCallback { command ->
 
             if (command == null) {
-                tokenProvider.onAuthError( this, IOException("Нет ответа"))
+                tokenProvider.onAuthError(this, IOException("Нет ответа"))
             } else {
                 when (command.name) {
-                    COMMAND_SUCCESS -> { }
+                    COMMAND_SUCCESS -> {}
                     COMMAND_ERROR -> {
-                        tokenProvider.onAuthError(this, IllegalStateException(command.data ?: "Error"))
+                        tokenProvider.onAuthError(
+                            this,
+                            IllegalStateException(command.data ?: "Error")
+                        )
                     }
-                    else -> throw  IllegalStateException ("Wrong: ${command.name}")
+                    else -> throw  IllegalStateException("Wrong: ${command.name}")
                 }
             }
         }
@@ -234,16 +251,52 @@ class GameEngineNetwork(
         sender.send("$command".also { println("$it") })
     }
 
-    private fun send(name: String, data : String? = null) {
+    private fun send(name: String, data: String? = null) {
         send(Command(name).apply { this.data = data })
     }
 
     private fun onRender(state: RemoteState) {
         remoteState = state
+        onInitGameCallback()
+        updatePlayerIds(state)
         getLocalPlayer(state)?.also {
             (localPlayer as? INetworkPlayer)?.setReady(it.isReady())
         }
         render()
+    }
+
+    private fun updatePlayerIds(state: RemoteState) {
+        val players = state.players
+        when (playersIds.size) {
+            0 -> {
+                when (players.size) {
+                    1 -> {
+                        playersIds.add(players[0].getId())
+                    }
+                    2 -> {
+                        playersIds.add(players[0].getId())
+                        playersIds.add(players[1].getId())
+                    }
+                }
+            }
+            1 -> when (players.size) {
+                1 -> {
+                    //это придет тот же игрок
+                }
+                2 -> {
+                    if (playersIds[0] == players[0].getId())
+                        playersIds.add(players[1].getId())
+                    else {
+                        playersIds.clear()
+                        updatePlayerIds(state)
+                    }
+                }
+            }
+            2 -> if (players.size > 1 && playersIds[0] != players[0].getId()) {
+                playersIds.clear()
+                updatePlayerIds(state)
+            }
+        }
     }
 
     private fun getLocalPlayer(state: RemoteState): IPlayer? {
@@ -252,14 +305,14 @@ class GameEngineNetwork(
     }
 
     private fun onSelectGame() {
-        setListenerCallback { command ->
-            if(command?.name == COMMAND_RENDER) {
-                remoteState = getRemoveState(command)
-                onInitGameCallback()  //здесь заканчивается initGame!
-            } else {
-                // todo
-            }
-        }
+//        setListenerCallback { command ->
+//            if (command?.name == COMMAND_RENDER) {
+//                remoteState = getRemoveState(command)
+//                onInitGameCallback()  //здесь заканчивается initGame!
+//            } else {
+//                // todo
+//            }
+//        }
         send(COMMAND_GAME, TYPE_OF_GAME)
     }
 

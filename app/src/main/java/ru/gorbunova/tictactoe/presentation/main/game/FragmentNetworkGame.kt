@@ -34,10 +34,6 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
         presenter.createPlayers(engine)
     }
 
-//    override fun isPlayerReady(engine: IEngine): Boolean {
-//        return engine.getCurrentPlayer()?.isReady() ?: false
-//    }
-
     override fun goToAuth() {
         (activity as? INavigateRouterMain)?.goToAuthScreen()
     }
