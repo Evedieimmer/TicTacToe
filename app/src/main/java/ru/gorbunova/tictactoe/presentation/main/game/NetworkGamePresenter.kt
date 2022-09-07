@@ -5,6 +5,7 @@ import moxy.InjectViewState
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
+import ru.gorbunova.tictactoe.gameLogic.BotPlayer
 import ru.gorbunova.tictactoe.gameLogic.IEngine
 import ru.gorbunova.tictactoe.gameLogic.ServiceGame
 import ru.gorbunova.tictactoe.gameLogic.networkGame.ITokenProvider
@@ -23,14 +24,21 @@ class NetworkGamePresenter @Inject constructor(
      * задача презентера создать игрока и передать информацию о пользователе сюда
      */
     fun createPlayers(engine: IEngine) {
-        val user = userRepository.getUser()
-        if (user == null) {
-            onAuthError(engine, IllegalStateException("User undefined"))
-            return
-        }
-        NetworkPlayer(user).apply {
+//        val user = userRepository.getUser()
+//        if (user == null) {
+//            onAuthError(engine, IllegalStateException("User undefined"))
+//            return
+//        }
+
+        NetworkPlayer(getUser(engine)).apply {
             engine.addPlayer(this)
 //            this.ready() //ТАК НЕЛЬЗЯЯ нужно запросить готовность
+        }
+    }
+
+    fun createBot(engine: IEngine) {
+        BotPlayer(getUser(engine), false).apply {
+            engine.addPlayer(this)
         }
     }
 
@@ -57,5 +65,13 @@ class NetworkGamePresenter @Inject constructor(
             }
         })
 
+    }
+
+    private fun getUser(engine: IEngine): User {
+        val user = userRepository.getUser()
+        if (user == null) {
+            onAuthError(engine, IllegalStateException("User undefined"))
+        }
+        return user ?: throw IllegalStateException("error")
     }
 }

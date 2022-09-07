@@ -1,9 +1,8 @@
 package ru.gorbunova.tictactoe.gameLogic.localGame
 
 import ru.gorbunova.tictactoe.gameLogic.AEngine
-import ru.gorbunova.tictactoe.gameLogic.IEngine
 import ru.gorbunova.tictactoe.gameLogic.IGameState
-import ru.gorbunova.tictactoe.gameLogic.IGameState.Companion.STATE_WAITING_PLAYERS_READY
+import ru.gorbunova.tictactoe.gameLogic.INetworkPlayer
 import ru.gorbunova.tictactoe.gameLogic.IPlayer
 import kotlin.random.Random
 
@@ -25,7 +24,7 @@ class GameEngineLocal() : AEngine() {
         private var cells: IntArray = IntArray(9) { -1 },
         internal var winner: IPlayer? = null,
         //какой ход ожидается
-        var statusGame: Int = STATE_WAITING_PLAYERS_READY
+        var statusGame: Int = IGameState.STATE_WAITING_PLAYERS_READY
 
     ) : IGameState {
 
@@ -54,14 +53,14 @@ class GameEngineLocal() : AEngine() {
         override fun restart() {
             cells = IntArray(9) { -1 }
             winner = null
-            statusGame = STATE_WAITING_PLAYERS_READY
+//            statusGame = IGameState.STATE_WAITING_PLAYERS_READY
         }
 
         override fun getStatus(): Int = statusGame
 
         override fun getCells() = cells.copyOf()
 
-        override fun isGameOver() = winner == null && cells.firstOrNull { it == IGameState.GAME_CELL_VALUE_NONE } == null
+        override fun isGameOver() = winner != null || !cells.any { it == IGameState.GAME_CELL_VALUE_NONE }
 
         fun changeTurn() {
             currentPlayer = if (currentPlayer == player1) player2 else player1
@@ -184,10 +183,27 @@ class GameEngineLocal() : AEngine() {
         player2ready = null
     }
 
+    override fun render() {
+        (gameState as? GameState)?.also { state ->
+            (state.player1 as? INetworkPlayer)?.also {
+                if (player1ready != null)
+                    it.setReady(true)
+            }
+            (state.player2 as? INetworkPlayer)?.also {
+                if (player2ready != null)
+                    it.setReady(true)
+            }
+        }
+        super.render()
+    }
+
     override fun restart() {
         val state = checkState().also { it.restart() }
         val player1 = state.player1 ?: throw IllegalStateException("Нет состояния для рестарта")
         val player2 = state.player2 ?: throw IllegalStateException("Нет состояния для рестарта")
+
+        player1ready = null
+        player2ready = null
 
         player1.setActionType(getActionType())
         player2.setActionType(getActionType(player1.getActionType()))

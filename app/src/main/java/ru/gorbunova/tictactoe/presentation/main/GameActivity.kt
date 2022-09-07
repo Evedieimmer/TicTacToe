@@ -47,15 +47,19 @@ class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INav
     }
 
     override fun showLocalGame() {
-        replace(FragmentLocalGame(), "GameLocal")
+        replace(FragmentLocalGame.create(), "GameLocal")
     }
 
     override fun showNetworkGame() {
-        replace(FragmentNetworkGame(), "NetGame")
+        replace(FragmentNetworkGame.create(), "NetGame")
+    }
+
+    override fun showNetworkGameForBot() {
+        replace(FragmentNetworkGame.create(true), "NetGame")
     }
 
     override fun showBotGame() {
-//        replace(FragmentBotGame(), "BotGame")
+        replace(FragmentLocalGame.create(true), "BotGame")
     }
 
     override fun showMenu() {

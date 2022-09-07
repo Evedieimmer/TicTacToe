@@ -1,17 +1,28 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
+import android.os.Bundle
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.di.module.NetModule
 import ru.gorbunova.tictactoe.gameLogic.IEngine
-import ru.gorbunova.tictactoe.gameLogic.ServiceGame
 import ru.gorbunova.tictactoe.gameLogic.networkGame.GameEngineNetwork
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import javax.inject.Inject
 
 
-class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
+open class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
+
+    companion object {
+
+        private const val KEY_USE_BOT = "KEY_USE_BOT"
+
+        fun create(useBot: Boolean = false) = FragmentNetworkGame().apply {
+            arguments = Bundle().apply {
+                putBoolean(KEY_USE_BOT, useBot)
+            }
+        }
+    }
 
     @Inject
     @InjectPresenter
@@ -31,7 +42,8 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
     )
 
     override fun createPlayers(engine: IEngine) {
-        presenter.createPlayers(engine)
+        if (isUseBot()) presenter.createBot(engine)
+        else presenter.createPlayers(engine)
     }
 
     override fun goToAuth() {
@@ -42,4 +54,5 @@ class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
         (activity as? INavigateRouterMain)?.showMenu()
     }
 
+    private fun isUseBot(): Boolean = arguments?.getBoolean(KEY_USE_BOT) ?: false
 }

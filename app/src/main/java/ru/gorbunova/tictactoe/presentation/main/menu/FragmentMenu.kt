@@ -42,6 +42,13 @@ class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
             }
         }
 
+        btnOnlineBot.setOnClickListener {
+            activity?.let {
+                if (it is INavigateRouterMain)
+                    it.showNetworkGameForBot()
+            }
+        }
+
         btnWithFriend.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)

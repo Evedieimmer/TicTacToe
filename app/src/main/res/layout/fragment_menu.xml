@@ -90,6 +90,15 @@
         android:backgroundTint="@color/button_color"/>
 
     <Button
+        android:id="@+id/btnOnlineBot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="83dp"
+        android:layout_marginTop="20dp"
+        android:text="Online bot"
+        android:backgroundTint="@color/button_color"/>
+
+    <Button
         android:id="@+id/btnWithFriend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
