@@ -1,4 +1,6 @@
-package ru.gorbunova.tictactoe.gameLogic
+package ru.gorbunova.tictactoe.gameLogic.base
+
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 
 interface IPlayer {
 

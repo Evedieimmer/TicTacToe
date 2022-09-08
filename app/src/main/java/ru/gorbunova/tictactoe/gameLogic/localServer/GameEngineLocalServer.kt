@@ -1,4 +1,4 @@
-package ru.gorbunova.tictactoe.gameLogic.localGame
+package ru.gorbunova.tictactoe.gameLogic.localServer
 
 import ru.gorbunova.tictactoe.gameLogic.base.AEngine
 import ru.gorbunova.tictactoe.gameLogic.base.IGameState
@@ -6,7 +6,7 @@ import ru.gorbunova.tictactoe.gameLogic.base.INetworkPlayer
 import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
 import kotlin.random.Random
 
-class GameEngineLocal() : AEngine() {
+class GameEngineLocalServer() : AEngine() {
 
     companion object {
 

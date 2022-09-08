@@ -1,7 +1,7 @@
 package ru.gorbunova.tictactoe.gameLogic.networkGame
 
-import ru.gorbunova.tictactoe.gameLogic.IGameState
-import ru.gorbunova.tictactoe.gameLogic.IPlayer
+import ru.gorbunova.tictactoe.gameLogic.base.IGameState
+import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
 
 class RemoteState (
     private var status: Int,

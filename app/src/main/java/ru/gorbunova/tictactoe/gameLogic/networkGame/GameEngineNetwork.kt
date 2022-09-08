@@ -3,10 +3,10 @@ package ru.gorbunova.tictactoe.gameLogic.networkGame
 import com.google.gson.Gson
 import eac.network.*
 import ru.gorbunova.tictactoe.App
-import ru.gorbunova.tictactoe.gameLogic.AEngine
-import ru.gorbunova.tictactoe.gameLogic.IGameState
-import ru.gorbunova.tictactoe.gameLogic.IPlayer
-import ru.gorbunova.tictactoe.gameLogic.INetworkPlayer
+import ru.gorbunova.tictactoe.gameLogic.base.AEngine
+import ru.gorbunova.tictactoe.gameLogic.base.IGameState
+import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
+import ru.gorbunova.tictactoe.gameLogic.base.INetworkPlayer
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -212,7 +212,9 @@ class GameEngineNetwork(
     override fun isGameOver(): Boolean = checkState().isGameOver()
 
     override fun render() {
-        App.handler.post { super.render() }
+        App.handler.post {
+            super.render()
+        }
     }
 
     override fun getLocalPlayer(): IPlayer? = localPlayer

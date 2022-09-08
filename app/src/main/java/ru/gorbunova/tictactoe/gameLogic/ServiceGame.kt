@@ -1,5 +1,6 @@
 package ru.gorbunova.tictactoe.gameLogic
 
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 import ru.gorbunova.tictactoe.gameLogic.localGame.GameEngineLocal
 
 object ServiceGame{

@@ -3,10 +3,9 @@ package ru.gorbunova.tictactoe.presentation.main.game
 import io.reactivex.rxjava3.core.Single
 import moxy.InjectViewState
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
-import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.BotPlayer
-import ru.gorbunova.tictactoe.gameLogic.IEngine
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 import ru.gorbunova.tictactoe.gameLogic.ServiceGame
 import ru.gorbunova.tictactoe.gameLogic.networkGame.ITokenProvider
 import ru.gorbunova.tictactoe.gameLogic.networkGame.NetworkPlayer
@@ -37,7 +36,7 @@ class NetworkGamePresenter @Inject constructor(
     }
 
     fun createBot(engine: IEngine) {
-        BotPlayer(getUser(engine), false).apply {
+        BotPlayer(getUser(engine), true).apply {
             engine.addPlayer(this)
         }
     }

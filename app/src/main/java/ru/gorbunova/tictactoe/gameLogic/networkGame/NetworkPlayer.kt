@@ -1,8 +1,8 @@
 package ru.gorbunova.tictactoe.gameLogic.networkGame
 
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
-import ru.gorbunova.tictactoe.gameLogic.APlayer
-import ru.gorbunova.tictactoe.gameLogic.INetworkPlayer
+import ru.gorbunova.tictactoe.gameLogic.base.APlayer
+import ru.gorbunova.tictactoe.gameLogic.base.INetworkPlayer
 
 open class NetworkPlayer(
     private val user: User

@@ -1,10 +1,9 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
 import android.os.Bundle
-import android.view.View
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.*
-import ru.gorbunova.tictactoe.gameLogic.IEngine
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 import ru.gorbunova.tictactoe.gameLogic.localGame.LocalPlayer
 
 class FragmentLocalGame: AFragmentGame() {

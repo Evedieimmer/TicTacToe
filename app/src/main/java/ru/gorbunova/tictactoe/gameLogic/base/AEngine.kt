@@ -1,4 +1,4 @@
-package ru.gorbunova.tictactoe.gameLogic
+package ru.gorbunova.tictactoe.gameLogic.base
 
 import androidx.annotation.CallSuper
 
@@ -28,7 +28,7 @@ abstract class AEngine: IEngine {
 
     open fun render() {
         synchronized(listeners) {
-            listeners.onEach { it.invoke(this) }
-        }
+            listeners.toList()
+        }.onEach { it.invoke(this) }
     }
  }

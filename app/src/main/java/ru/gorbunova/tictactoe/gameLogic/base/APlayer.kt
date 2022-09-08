@@ -1,4 +1,4 @@
-package ru.gorbunova.tictactoe.gameLogic
+package ru.gorbunova.tictactoe.gameLogic.base
 
 abstract class APlayer: IPlayer {
 

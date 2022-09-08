@@ -11,9 +11,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.databinding.FragmentGameBinding
-import ru.gorbunova.tictactoe.gameLogic.IEngine
-import ru.gorbunova.tictactoe.gameLogic.IGameState
-import ru.gorbunova.tictactoe.gameLogic.IPlayer
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
+import ru.gorbunova.tictactoe.gameLogic.base.IGameState
+import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
 import ru.gorbunova.tictactoe.gameLogic.ServiceGame
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
 import soft.eac.appmvptemplate.common.childViews

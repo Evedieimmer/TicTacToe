@@ -1,7 +1,7 @@
 package ru.gorbunova.tictactoe.gameLogic.networkGame
 
-import ru.gorbunova.tictactoe.gameLogic.IEngine
-import ru.gorbunova.tictactoe.gameLogic.IPlayer
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
+import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
 
 class RemotePlayer(
     private val userId: Int,

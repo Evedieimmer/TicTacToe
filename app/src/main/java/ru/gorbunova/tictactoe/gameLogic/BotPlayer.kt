@@ -1,8 +1,9 @@
 package ru.gorbunova.tictactoe.gameLogic
 
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
+import ru.gorbunova.tictactoe.gameLogic.base.IGameState
 import ru.gorbunova.tictactoe.gameLogic.networkGame.NetworkPlayer
-import java.lang.IllegalStateException
 import kotlin.random.Random
 
 
@@ -11,29 +12,32 @@ class BotPlayer(
     private val doEndGame: Boolean = false
 ) : NetworkPlayer(user) {
 
+    private val listener: (IEngine) -> Unit = { engine ->
+
+        getSelf(engine)?.also {
+            setReady(it.isReady())
+        }
+
+        // Начало
+        val state = engine.getState()
+        if (state.getStatus() == IGameState.STATE_WAITING_PLAYERS_READY)
+            onStartGame(engine)
+
+        //в процессе
+        else if (state.getStatus() == IGameState.STATE_GAME_PROCESSING)
+            onProcessing(engine)
+
+        //завершение
+        else
+            onEndGame(engine)
+
+    }
+
     override fun getName(): String = "Bot"
 
     override fun setEngine(engine: IEngine) {
         super.setEngine(engine)
-        engine.addListener { engine ->
-
-            getSelf(engine)?.also {
-                setReady(it.isReady())
-            }
-
-            // Начало
-            val state = engine.getState()
-            if (state.getStatus() == IGameState.STATE_WAITING_PLAYERS_READY)
-                onStartGame(engine)
-
-            //в процессе
-            else if (state.getStatus() == IGameState.STATE_GAME_PROCESSING)
-                onProcessing(engine)
-
-            //завершение
-            else
-                onEndGame()
-        }
+        engine.addListener(listener)
     }
 
     //Проверить готовность игрока, если готов - то и бот готов
@@ -52,8 +56,11 @@ class BotPlayer(
         }
     }
 
-    private fun onEndGame() {
-        if (doEndGame) ServiceGame.endGame()
+    private fun onEndGame(engine: IEngine) {
+        if (doEndGame) {
+            engine.removeListener(listener)
+            ServiceGame.endGame()
+        }
     }
 
     private fun randomBotCell(state: IGameState): Int {
@@ -76,8 +83,16 @@ class BotPlayer(
             if (it == this)
                 return it as BotPlayer
         }
-
         return null
 //        throw IllegalStateException()
     }
+
+//    private fun setBotEndGame(engine: IEngine) {
+//        val state = engine.getState()
+//        if (state.getStatus() == IGameState.STATE_GAME_END)
+//            doEndGame = true
+//        getSelf(engine)?.also {
+//            setReady(false)
+//        }
+//    }
 }

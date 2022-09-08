@@ -1,13 +1,6 @@
 package ru.gorbunova.tictactoe.presentation.main.game
 
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
-import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
-import ru.gorbunova.tictactoe.domain.di.module.NetModule
-import ru.gorbunova.tictactoe.gameLogic.IEngine
-import ru.gorbunova.tictactoe.gameLogic.networkGame.GameEngineNetwork
-import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
-import javax.inject.Inject
+import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 
 
 class FragmentBotGame : FragmentNetworkGame(), INetworkGameView{
