@@ -38,7 +38,7 @@ class GameEngineNetwork(
         private val gson = Gson()
     }
 
-    private class Command {
+     class Command {
 
         companion object {
             private const val DIVIDER = ":"

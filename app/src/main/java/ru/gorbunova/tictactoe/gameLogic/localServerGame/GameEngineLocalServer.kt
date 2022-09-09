@@ -1,4 +1,4 @@
-package ru.gorbunova.tictactoe.gameLogic.localServer
+package ru.gorbunova.tictactoe.gameLogic.localServerGame
 
 import ru.gorbunova.tictactoe.gameLogic.base.AEngine
 import ru.gorbunova.tictactoe.gameLogic.base.IGameState
@@ -23,7 +23,6 @@ class GameEngineLocalServer() : AEngine() {
 
         private var cells: IntArray = IntArray(9) { -1 },
         internal var winner: IPlayer? = null,
-        //какой ход ожидается
         var statusGame: Int = IGameState.STATE_WAITING_PLAYERS_READY
 
     ) : IGameState {
@@ -127,11 +126,11 @@ class GameEngineLocalServer() : AEngine() {
             return
         }
         throw IllegalStateException("Не более 2х игроков")
+        render() //первый рендер с одним игроком, статус - ожидание
     }
 
     override fun ready(player: IPlayer) {
 
-        //если оба игрока здесь, то начнем игру
         val player1 = player1ready
 
         if (player1ready == null)
@@ -144,7 +143,7 @@ class GameEngineLocalServer() : AEngine() {
                 it.setStatus(IGameState.STATE_GAME_PROCESSING)
             }
         }
-        render()
+        render() // рендер с двумя игроками, и статусом - в процессе
     }
 
     override fun executeMove(player: IPlayer, indexCell: Int) {
