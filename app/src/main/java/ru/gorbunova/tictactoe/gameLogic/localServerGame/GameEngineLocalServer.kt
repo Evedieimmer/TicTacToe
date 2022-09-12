@@ -1,12 +1,16 @@
 package ru.gorbunova.tictactoe.gameLogic.localServerGame
 
+import eac.network.Server
+import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.gameLogic.base.AEngine
 import ru.gorbunova.tictactoe.gameLogic.base.IGameState
 import ru.gorbunova.tictactoe.gameLogic.base.INetworkPlayer
 import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
 import kotlin.random.Random
 
-class GameEngineLocalServer() : AEngine() {
+class GameEngineLocal2(
+    private val port: Int = 0
+) : AEngine() {
 
     companion object {
 
@@ -105,9 +109,16 @@ class GameEngineLocalServer() : AEngine() {
     private var player1ready: IPlayer? = null
     private var player2ready: IPlayer? = null
 
+    // переменные для сетевой игры
+    private var server: Server? = null
+
+
+
     override fun initGame(call: (Throwable?) -> Unit) {
         gameState = GameState()
-        call(null)
+        // Если надо, поднимаем сервер
+        if (port > 0) createServer(port, call)
+        else call(null)
     }
 
     override fun addPlayer(player: IPlayer) {
@@ -118,6 +129,7 @@ class GameEngineLocalServer() : AEngine() {
         if (state.player1 == null) {
             player.setActionType(getActionType())
             state.player1 = player
+            // если серверная игра, то добавить фейк плеера
             return
         }
         if (state.player2 == null) {
@@ -177,6 +189,7 @@ class GameEngineLocalServer() : AEngine() {
 
     override fun endGame() {
         super.endGame()
+        //если серверная игра - остановить сервер
         gameState = null
         player1ready = null
         player2ready = null
@@ -224,5 +237,27 @@ class GameEngineLocalServer() : AEngine() {
         }
 
         return null
+    }
+
+    private fun createServer(port: Int, call: (Throwable?) -> Unit) {
+        server?.shutdown()
+        server = Server(port, Server.Protocol.TCP)
+            .setOnStart {
+                App.handler.post { call(null) }
+
+            }
+            .setOnConnected {
+
+            }
+            .setOnDisconnected {
+
+            }
+            .setOnError { server, throwable ->
+                throwable.printStackTrace()
+                false
+            }
+            .setOnStop {
+                // если сервер не стартанул - кинуть ошибку и обработать ее выше
+            }
     }
 }

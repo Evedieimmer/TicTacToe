@@ -19,21 +19,20 @@ class GameEngineNetwork(
     companion object {
 
         // Команды сервера
-        private const val COMMAND_AUTHORIZATION = "AUTHORIZATION" //запрос на подключение к серверу
-        private const val COMMAND_SUCCESS = "SUCCESS" //в случае удачной авторизации на сервере
-        private const val COMMAND_ERROR =
-            "ERROR" // в случае неудачной авторизации -> нужно выкинуть пользователя на экран авторизации
-        private const val COMMAND_GAMES = "GAMES" //список игр с сервера
-        private const val COMMAND_RENDER = "RENDER" // состояние игры
+        const val COMMAND_AUTHORIZATION = "AUTHORIZATION" //запрос на подключение к серверу
+        const val COMMAND_SUCCESS = "SUCCESS" //в случае удачной авторизации на сервере
+        const val COMMAND_ERROR = "ERROR" // в случае неудачной авторизации -> нужно выкинуть пользователя на экран авторизации
+        const val COMMAND_GAMES = "GAMES" //список игр с сервера
+        const val COMMAND_RENDER = "RENDER" // состояние игры
 
         //команды клиента (в ответе всегда приходит рендер/состояние игры)
-        private const val COMMAND_GAME = "GAME" //отправка названия игры
-        private const val COMMAND_READY = "READY" //готовность игрока
-        private const val COMMAND_CELL = "CELL" //выполение хода
-        private const val COMMAND_EXIT = "EXIT" //выход из игры
-        private const val COMMAND_STATE = "STATE" //узнать состояние текущей игры
+        const val COMMAND_GAME = "GAME" //отправка названия игры
+        const val COMMAND_READY = "READY" //готовность игрока
+        const val COMMAND_CELL = "CELL" //выполение хода
+        const val COMMAND_EXIT = "EXIT" //выход из игры
+        const val COMMAND_STATE = "STATE" //узнать состояние текущей игры
 
-        private const val TYPE_OF_GAME = "tic-tac-toe"
+        const val TYPE_OF_GAME = "tic-tac-toe"
 
         private val gson = Gson()
     }
@@ -118,17 +117,16 @@ class GameEngineNetwork(
         initGameCallback = call
         connection = TcpReconnect(ip, port, 10000L).apply {
 
-            this
-                .setOnConnecting<Connection> {
+                setOnConnecting<Connection> {
 
                 }
-                .setOnConnected<Connection> {
+                setOnConnected<Connection> {
 
                 }
-                .setOnDisconnected<Connection> {
+                setOnDisconnected<Connection> {
 
                 }
-                .setOnError<Connection> { _, throwable ->
+                setOnError<Connection> { _, throwable ->
                     onInitGameCallback(throwable)
                     false
                 }
