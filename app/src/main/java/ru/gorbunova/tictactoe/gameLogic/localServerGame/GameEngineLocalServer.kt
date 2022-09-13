@@ -1,5 +1,6 @@
 package ru.gorbunova.tictactoe.gameLogic.localServerGame
 
+import eac.common.Tools
 import eac.network.Server
 import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.gameLogic.base.AEngine
@@ -112,7 +113,8 @@ class GameEngineLocal2(
     // переменные для сетевой игры
     private var server: Server? = null
 
-
+    fun getIp() = Tools.getInetAddress()?.hostAddress ?: "127.0.0.1"
+    fun getPort() = port
 
     override fun initGame(call: (Throwable?) -> Unit) {
         gameState = GameState()
@@ -190,6 +192,9 @@ class GameEngineLocal2(
     override fun endGame() {
         super.endGame()
         //если серверная игра - остановить сервер
+        server?.also {
+
+        }
         gameState = null
         player1ready = null
         player2ready = null
@@ -244,7 +249,6 @@ class GameEngineLocal2(
         server = Server(port, Server.Protocol.TCP)
             .setOnStart {
                 App.handler.post { call(null) }
-
             }
             .setOnConnected {
 
@@ -257,7 +261,7 @@ class GameEngineLocal2(
                 false
             }
             .setOnStop {
-                // если сервер не стартанул - кинуть ошибку и обработать ее выше
+                // если сервер не стартанул - кинуть ошибку и обработать ее уровнем выше
             }
     }
 }

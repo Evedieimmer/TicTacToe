@@ -7,15 +7,17 @@ import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
 import ru.gorbunova.tictactoe.gameLogic.networkGame.GameEngineNetwork
+import ru.gorbunova.tictactoe.gameLogic.networkGame.ITokenProvider
 import ru.gorbunova.tictactoe.gameLogic.networkGame.NetworkPlayer
 import ru.gorbunova.tictactoe.gameLogic.networkGame.RemoteState
 
 class FakePlayer(
     private val user: User
-): NetworkPlayer(user) {
+): NetworkPlayer(user), ITokenProvider {
 
     private val jsonSend = JsonObject()
     private val jsonReceive = Gson()
+
 
 
     val listener: (IEngine) -> Unit = { engine ->
@@ -96,4 +98,8 @@ class FakePlayer(
     private fun receiveFromNetworkPlayer() {
 
     }
+
+    override fun provideToken(): String = ""
+
+    override fun onAuthError(engine: IEngine, e: Exception) {}
 }
