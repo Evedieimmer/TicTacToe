@@ -9,7 +9,7 @@ import ru.gorbunova.tictactoe.gameLogic.base.INetworkPlayer
 import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
 import kotlin.random.Random
 
-class GameEngineLocal2(
+class GameEngineLocalServer(
     private val port: Int = 0
 ) : AEngine() {
 

@@ -3,37 +3,42 @@ package ru.gorbunova.tictactoe.gameLogic.localServerGame
 import eac.network.Connection
 import eac.network.PackageReceiver
 import eac.network.PackageSender
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.networkGame.GameEngineNetwork
-import ru.gorbunova.tictactoe.gameLogic.networkGame.ITokenProvider
 
 
 class ConnectToLocalServer(
     _connection: Connection? = null,
-    _tokenProvider: ITokenProvider
+    _fakePlayer: FakePlayer
 ) {
+// данный класс-прослойка занимается регистрацией игрока на сервере: встреча подключения, индентификация
+// требуется создание обертки-подключения, для использования Receiver и Sender
+// 1) Придет подключение -> "AUTHORIZATION"
+// 2) Придет токен -> "SUCCESS" + GAMES:["tic-tac-toe"]" / "ERROR:<error message>"
+// 3) Придет "GAME:tic-tac-toe" -> RENDER.. - это уже в fakePlayer
 
-    //
 
-    private val connectionListener: (Connection, ByteArray) -> Unit = { _, bytes ->
-        val command = GameEngineNetwork.Command(bytes.decodeToString())
-        println("COMMAND: $command")
-    }
-
+    private val fakePlayer = _fakePlayer
     private val connection = _connection
-    private val tokenProvider = _tokenProvider
+
+    private val connectionListener: (Connection, ByteArray) -> Unit = { connection, bytes ->
+        if(bytes != null)
+            onAuth("$bytes")
+        else authorization()
+    }
 
     private val sender = PackageSender(connection)
     private val receiver = PackageReceiver(connection, connectionListener)
 
-    private fun onAuth(fakePlayer: FakePlayer) {
+    private fun onAuth(sendToken: String) {
         //Проверить существует ли такой токен (проверить формат?)
         //Проверить есть ли уже такой подключенный пользователь  = сравнить с фейкплеером
-
         try {
-            val accessToken = tokenProvider.provideToken()
-            if(accessToken != null)
-
-
+            if(sendToken == fakePlayer.provideToken()) {
+                //проверка на повторное подключение
+            }
+            val regex = Regex("""\w{8}-\w{4}-\w{4}-\w{4}-\w{12}""")
+            if (regex.matches(sendToken))
                 send(GameEngineNetwork.COMMAND_SUCCESS)
         } catch (e: Exception) {
             send(GameEngineNetwork.COMMAND_ERROR, e.localizedMessage)

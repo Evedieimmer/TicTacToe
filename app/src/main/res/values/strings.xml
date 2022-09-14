@@ -22,4 +22,6 @@
     <string name="passwords_do_not_match">Пароли не совпадают</string>
     <string name="who_turn">Ваш ход</string>
     <string name="ready">Я готов!</string>
+    <string name="create_server">Создать комнату</string>
+    <string name="connect">Подключиться к комнате</string>
 </resources>

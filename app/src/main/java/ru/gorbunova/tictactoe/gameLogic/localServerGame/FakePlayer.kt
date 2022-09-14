@@ -3,6 +3,9 @@ package ru.gorbunova.tictactoe.gameLogic.localServerGame
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import eac.network.Connection
+import eac.network.PackageReceiver
+import eac.network.PackageSender
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 import ru.gorbunova.tictactoe.gameLogic.base.IPlayer
@@ -18,15 +21,32 @@ class FakePlayer(
     private val jsonSend = JsonObject()
     private val jsonReceive = Gson()
 
+    private val connection: Connection? = null
+    private var listenerCallback: ((GameEngineNetwork.Command?) -> Unit)? = null
+    private val connectionListener: (Connection, ByteArray) -> Unit = { _, bytes ->
+        val command = GameEngineNetwork.Command(bytes.decodeToString())
+         val callback = listenerCallback
+        if(callback != null) {
+            listenerCallback = null
+            callback(command)
+        } else {
+            when(command.name) {
+                GameEngineNetwork.COMMAND_GAME, GameEngineNetwork.COMMAND_READY, GameEngineNetwork.COMMAND_CELL -> {
+                    send(GameEngineNetwork.COMMAND_RENDER, "$jsonSend")
 
+                }
+                GameEngineNetwork.COMMAND_EXIT -> {
+                    receiver.unregister()
+                    sender.unregister()
+                 }
+            }
+        }
+    }
+    private val sender = PackageSender(connection)
+    private val receiver = PackageReceiver(connection, connectionListener)
 
     val listener: (IEngine) -> Unit = { engine ->
-        val state = engine.getState()
-        val player1 = engine.getPlayer1()
-        val player2 = engine.getPlayer2()
-        engine.getActionPlayer()
-
-        renderToJson(engine, player1, player2)
+        renderToJson(engine)
     }
 
     override fun setEngine(engine: IEngine) {
@@ -50,9 +70,12 @@ class FakePlayer(
         return jsonPlayers
     }
 
-    private fun renderToJson (engine: IEngine, player1: IPlayer?, player2: IPlayer?): String {
+    private fun renderToJson (engine: IEngine): String {
 
+        val player1 = engine.getPlayer1()
+        val player2 = engine.getPlayer2()
         val state = engine.getState()
+
         jsonSend.addProperty("status", state.getStatus())
 
         jsonSend.add("game", JsonArray().apply {
@@ -77,29 +100,15 @@ class FakePlayer(
         )
     }
 
-    private fun onCommand(command: GameEngineNetwork.Command) {
-        when (command.name) {
-            GameEngineNetwork.COMMAND_GAME, GameEngineNetwork.COMMAND_READY -> {
-
-            }
-            GameEngineNetwork.COMMAND_CELL -> {
-                //выполнить ход и отправить рендер
-            }
-            GameEngineNetwork.COMMAND_EXIT -> {
-                //завершить игру
-            }
-        }
+    private fun send(command: GameEngineNetwork.Command) {
+        sender.send("$command".also { println("$it") })
     }
 
-    private fun sendToNetworkPlayer() {
-
+    private fun send(name: String, data: String? = null) {
+        send(GameEngineNetwork.Command(name).apply { this.data = data })
     }
 
-    private fun receiveFromNetworkPlayer() {
-
-    }
-
-    override fun provideToken(): String = ""
+    override fun provideToken(): String = user.token?.access ?: ""
 
     override fun onAuthError(engine: IEngine, e: Exception) {}
 }

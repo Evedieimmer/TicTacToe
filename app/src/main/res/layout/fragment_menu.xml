@@ -74,7 +74,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:text="@string/game"
         android:textAppearance="@style/TextAppearance.Material3.DisplayLarge"
         android:textColor="@color/button_color"/>
@@ -85,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="@string/game_online"
         android:backgroundTint="@color/button_color"/>
 
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:text="Online bot"
         android:backgroundTint="@color/button_color"/>
 
@@ -124,13 +124,29 @@
         android:layout_marginTop="10dp"
         android:text="@string/rating"
         android:backgroundTint="@color/button_color"/>
+    <Button
+        android:id="@+id/btnCreateServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="83dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/create_server"
+        android:backgroundTint="@color/button_color"/>
+    <Button
+        android:id="@+id/btnConnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="83dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/connect"
+        android:backgroundTint="@color/button_color"/>
 
     <Button
         android:id="@+id/btnQuitTheGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="10dp"
         android:text="@string/exit"
         style="?attr/materialButtonOutlinedStyle"/>
 
