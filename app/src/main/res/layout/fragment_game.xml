@@ -103,32 +103,16 @@
         android:text="@string/ready"
         android:visibility="gone"/>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal">-->
-
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="0.5"-->
-<!--            android:text="@string/who_turn"-->
-<!--            android:textAlignment="viewEnd"-->
-<!--            android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--            android:textColor="@color/button_color" />-->
-
-        <TextView
-            android:id="@+id/whoTurn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/who_turn"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/button_color"
-            android:visibility="invisible"
-            tools:visibility="visible"/>
-<!--    </LinearLayout>-->
-
+    <TextView
+        android:id="@+id/whoTurn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/who_turn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/button_color"
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
     <RelativeLayout
         android:layout_marginTop="20dp"
@@ -244,4 +228,15 @@
         android:layout_marginTop="40dp"
         android:text="@string/exit"
         style="?attr/materialButtonOutlinedStyle"/>
+
+    <TextView
+        android:id="@+id/tvIpToConnect"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/who_turn"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/button_color"
+        android:visibility="gone" />
 </LinearLayout>

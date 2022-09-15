@@ -22,6 +22,7 @@ class NetModule {
 
 //        private const val DOMAIN = "212.75.210.227"
         const val DOMAIN = "10.102.100.91"
+//        const val DOMAIN = "192.168.0.10"
         const val GAME_SERVICE_PORT = 3456
 
         const val DOMAIN_MAIN_API = "http://$DOMAIN:8080"

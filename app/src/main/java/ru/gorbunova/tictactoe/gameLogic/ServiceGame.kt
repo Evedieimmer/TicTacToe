@@ -2,6 +2,7 @@ package ru.gorbunova.tictactoe.gameLogic
 
 import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 import ru.gorbunova.tictactoe.gameLogic.localGame.GameEngineLocal
+import ru.gorbunova.tictactoe.gameLogic.localServerGame.GameEngineLocalServer
 
 object ServiceGame{
 
@@ -25,6 +26,10 @@ object ServiceGame{
     }
 
     fun createLocalGame() = GameEngineLocal().apply {
+        engine = this
+    }
+
+    fun createServerGame(port: Int) = GameEngineLocalServer(port).apply {
         engine = this
     }
 

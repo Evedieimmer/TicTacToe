@@ -118,13 +118,13 @@ class GameEngineNetwork(
         connection = TcpReconnect(ip, port, 10000L).apply {
 
                 setOnConnecting<Connection> {
-
+                    println()
                 }
                 setOnConnected<Connection> {
-
+                    println()
                 }
                 setOnDisconnected<Connection> {
-
+                    println()
                 }
                 setOnError<Connection> { _, throwable ->
                     onInitGameCallback(throwable)

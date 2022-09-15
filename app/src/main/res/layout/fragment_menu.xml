@@ -125,7 +125,7 @@
         android:text="@string/rating"
         android:backgroundTint="@color/button_color"/>
     <Button
-        android:id="@+id/btnCreateServer"
+        android:id="@+id/btnCreateLocalServerGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
@@ -133,7 +133,7 @@
         android:text="@string/create_server"
         android:backgroundTint="@color/button_color"/>
     <Button
-        android:id="@+id/btnConnect"
+        android:id="@+id/btnConnectToGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"

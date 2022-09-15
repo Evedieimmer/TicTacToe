@@ -7,6 +7,7 @@ import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.gameLogic.BotPlayer
 import ru.gorbunova.tictactoe.gameLogic.base.IEngine
 import ru.gorbunova.tictactoe.gameLogic.ServiceGame
+import ru.gorbunova.tictactoe.gameLogic.localServerGame.FakePlayer
 import ru.gorbunova.tictactoe.gameLogic.networkGame.ITokenProvider
 import ru.gorbunova.tictactoe.gameLogic.networkGame.NetworkPlayer
 import soft.eac.appmvptemplate.common.rx.SubRX
@@ -23,15 +24,8 @@ class NetworkGamePresenter @Inject constructor(
      * задача презентера создать игрока и передать информацию о пользователе сюда
      */
     fun createPlayers(engine: IEngine) {
-//        val user = userRepository.getUser()
-//        if (user == null) {
-//            onAuthError(engine, IllegalStateException("User undefined"))
-//            return
-//        }
-
         NetworkPlayer(getUser(engine)).apply {
             engine.addPlayer(this)
-//            this.ready() //ТАК НЕЛЬЗЯЯ нужно запросить готовность
         }
     }
 

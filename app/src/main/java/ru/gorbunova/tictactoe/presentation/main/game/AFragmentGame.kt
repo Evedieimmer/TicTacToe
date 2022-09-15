@@ -48,6 +48,7 @@ abstract class AFragmentGame : ABaseFragment(FragmentGameBinding::class.java) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         startGame()
 
         binding.btnReady.setOnClickListener {

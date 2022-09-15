@@ -132,15 +132,22 @@ class GameEngineLocalServer(
             player.setActionType(getActionType())
             state.player1 = player
             // если серверная игра, то добавить фейк плеера
+            if (port != 0)
+                state.player2 = FakePlayer().apply {
+                    setActionType(getActionType(player.getActionType()))
+                }
+            render()
             return
         }
+
         if (state.player2 == null) {
             player.setActionType(getActionType(state.player1!!.getActionType()))
             state.player2 = player
+            render()
             return
         }
+
         throw IllegalStateException("Не более 2х игроков")
-        render() //первый рендер с одним игроком, статус - ожидание
     }
 
     override fun ready(player: IPlayer) {
@@ -193,7 +200,8 @@ class GameEngineLocalServer(
         super.endGame()
         //если серверная игра - остановить сервер
         server?.also {
-
+            server = null
+            it.shutdown()
         }
         gameState = null
         player1ready = null
@@ -250,8 +258,15 @@ class GameEngineLocalServer(
             .setOnStart {
                 App.handler.post { call(null) }
             }
+            .setOnStop {
+                // если сервер не стартанул - кинуть ошибку и обработать ее уровнем выше
+            }
             .setOnConnected {
-
+                Authentication(it) { connection ->
+                    (checkState().player2 as? FakePlayer)?.also {
+                        it.setConnection(connection)
+                    } ?: throw IllegalStateException()
+                }
             }
             .setOnDisconnected {
 
@@ -259,9 +274,6 @@ class GameEngineLocalServer(
             .setOnError { server, throwable ->
                 throwable.printStackTrace()
                 false
-            }
-            .setOnStop {
-                // если сервер не стартанул - кинуть ошибку и обработать ее уровнем выше
-            }
+            }.apply { start() }
     }
 }

@@ -19,4 +19,6 @@ interface IEngine {
 
     fun endGame()
     fun restart()
+
+    fun render()
 }

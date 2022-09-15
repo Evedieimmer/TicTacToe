@@ -10,4 +10,6 @@ interface INavigateRouterMain {
     fun showMenu()
     fun showRecords()
     fun goToAuthScreen()
+    fun showHostGame()
+    fun showGameWithHost()
 }

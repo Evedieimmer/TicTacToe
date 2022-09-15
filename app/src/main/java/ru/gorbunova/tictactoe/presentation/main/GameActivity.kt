@@ -2,12 +2,14 @@ package ru.gorbunova.tictactoe.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import eac.common.Tools
 import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.R
+import ru.gorbunova.tictactoe.databinding.DialogInputAddressBinding
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import ru.gorbunova.tictactoe.presentation.auth.AuthActivity
-import ru.gorbunova.tictactoe.presentation.main.game.FragmentBotGame
 import ru.gorbunova.tictactoe.presentation.main.game.FragmentLocalGame
 import ru.gorbunova.tictactoe.presentation.main.game.FragmentNetworkGame
 import ru.gorbunova.tictactoe.presentation.main.menu.FragmentMenu
@@ -47,19 +49,19 @@ class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INav
     }
 
     override fun showLocalGame() {
-        replace(FragmentLocalGame.create(), "GameLocal")
+        replace(FragmentLocalGame(), "GameLocal")
     }
 
     override fun showNetworkGame() {
-        replace(FragmentNetworkGame.create(), "NetGame")
+        replace(FragmentNetworkGame(), "NetGame")
     }
 
     override fun showNetworkGameForBot() {
-        replace(FragmentNetworkGame.create(true), "NetGame")
+        replace(FragmentNetworkGame.createWithBot(), "NetGame")
     }
 
     override fun showBotGame() {
-        replace(FragmentLocalGame.create(true), "BotGame")
+        replace(FragmentLocalGame.createWithBot(), "BotGame")
     }
 
     override fun showMenu() {
@@ -74,5 +76,29 @@ class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INav
         AuthActivity.show()
 //        val intent = Intent(this, AuthActivity::class.java)
 //        startActivity(intent)
+    }
+
+    override fun showHostGame() {
+        replace(FragmentLocalGame.createWithServer(8080), "HostGame")
+    }
+
+    override fun showGameWithHost() {
+        val binding = DialogInputAddressBinding.inflate(layoutInflater)
+
+        val dialog = AlertDialog.Builder(this)
+            .setCancelable(false)
+            .setView(binding.root)
+            .setPositiveButton("Подключится") { _, _ -> }
+            .setNegativeButton("Выход") { _, _ -> }
+            .create().apply { show() }
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val ip = "${binding.etInputIp.text}".trim()
+            if (Tools.isIPv4Address(ip)) {
+                replace(FragmentNetworkGame.create(ip, 8080), "WithHostGame")
+                dialog.dismiss()
+            } else
+                toast("asdfasdf")
+        }
     }
 }

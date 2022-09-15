@@ -75,6 +75,20 @@ class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
                 presenter.logOut()
             }
         }
+
+        btnConnectToGame.setOnClickListener {
+            activity?.let {
+                if (it is INavigateRouterMain)
+                    it.showGameWithHost()
+            }
+        }
+
+        btnCreateLocalServerGame.setOnClickListener {
+            activity?.let {
+                if (it is INavigateRouterMain)
+                    it.showHostGame()
+            }
+        }
     }
 
     override fun goToAuthScreen() {

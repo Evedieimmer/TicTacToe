@@ -16,10 +16,19 @@ open class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
     companion object {
 
         private const val KEY_USE_BOT = "KEY_USE_BOT"
+        private const val KEY_IP = "KEY_IP"
+        private const val KEY_PORT = "KEY_PORT"
 
-        fun create(useBot: Boolean = false) = FragmentNetworkGame().apply {
+        fun createWithBot() = FragmentNetworkGame().apply {
             arguments = Bundle().apply {
-                putBoolean(KEY_USE_BOT, useBot)
+                putBoolean(KEY_USE_BOT, true)
+            }
+        }
+
+        fun create(ip: String, port: Int) = FragmentNetworkGame().apply {
+            arguments = Bundle().apply {
+                putString(KEY_IP, ip)
+                putInt(KEY_PORT, port)
             }
         }
     }
@@ -36,8 +45,8 @@ open class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
     }
 
     override fun createEngine(): IEngine = GameEngineNetwork(
-        NetModule.DOMAIN,
-        NetModule.GAME_SERVICE_PORT,
+        getIp(),
+        getPort(),
         presenter
     )
 
@@ -54,5 +63,8 @@ open class FragmentNetworkGame : AFragmentGame(), INetworkGameView {
         (activity as? INavigateRouterMain)?.showMenu()
     }
 
+    private fun getIp() = arguments?.getString(KEY_IP) ?: NetModule.DOMAIN
+    private fun getPort() = arguments?.getInt(KEY_PORT, NetModule.GAME_SERVICE_PORT)
+        ?: NetModule.GAME_SERVICE_PORT
     private fun isUseBot(): Boolean = arguments?.getBoolean(KEY_USE_BOT) ?: false
 }

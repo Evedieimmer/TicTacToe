@@ -24,4 +24,6 @@
     <string name="ready">Я готов!</string>
     <string name="create_server">Создать комнату</string>
     <string name="connect">Подключиться к комнате</string>
+    <string name="enter_ip">Введите IP</string>
+
 </resources>
