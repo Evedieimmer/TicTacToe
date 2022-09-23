@@ -29,8 +29,6 @@ class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INav
         }
     }
 
-
-
     @Inject
     lateinit var userRepository: UserRepository
 //    private val gameLocalFragment: FragmentLocalGame by lazy { FragmentLocalGame() }

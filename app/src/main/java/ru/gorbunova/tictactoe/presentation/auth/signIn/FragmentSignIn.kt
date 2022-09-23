@@ -3,16 +3,16 @@ package ru.gorbunova.tictactoe.presentation.auth.signIn
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_sign_in.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.gorbunova.tictactoe.R
+import ru.gorbunova.tictactoe.databinding.FragmentSignInBinding
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
 import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
-class FragmentSignIn : ABaseFragment(R.layout.fragment_sign_in), ISignInView {
+class FragmentSignIn : ABaseFragment(FragmentSignInBinding::class.java), ISignInView {
 
     @Inject
     @InjectPresenter
@@ -25,11 +25,11 @@ class FragmentSignIn : ABaseFragment(R.layout.fragment_sign_in), ISignInView {
         DaggerAppComponent.create().inject(this)
     }
 
-//     fun getViewId() = R.layout.fragment_sign_in
+    private val binding: FragmentSignInBinding get() = getViewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnSignUp.setOnClickListener {
+        binding.btnSignUp.setOnClickListener {
             (activity as? INavigateRouter)?.showSignUp()
 //            activity?.let{
 //                if(it is INavigateRouter)
@@ -37,9 +37,9 @@ class FragmentSignIn : ABaseFragment(R.layout.fragment_sign_in), ISignInView {
 //            }
         }
 
-        btnSignIn.setOnClickListener {
-            val login = "${etLogin.text}"
-            val password = "${etPassword.text}"
+        binding.btnSignIn.setOnClickListener {
+            val login = "${binding.etLogin.text}"
+            val password = "${binding.etPassword.text}"
 
             if (login.isEmpty() || password.isEmpty()) {
                 toast(R.string.error_login_password)

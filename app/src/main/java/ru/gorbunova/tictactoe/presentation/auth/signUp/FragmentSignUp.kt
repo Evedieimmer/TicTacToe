@@ -1,26 +1,26 @@
 package ru.gorbunova.tictactoe.presentation.auth.signUp
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
-import kotlinx.android.synthetic.main.fragment_sign_up.*
-import kotlinx.android.synthetic.main.fragment_sign_up.btnSignUp
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.R
 import ru.gorbunova.tictactoe.databinding.FragmentSignUpBinding
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.auth.INavigateRouter
+import soft.eac.appmvptemplate.common.IPermissionAndResultProvider
+import soft.eac.appmvptemplate.common.Tools
 import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
-class FragmentSignUp : ABaseFragment(R.layout.fragment_sign_up), ISignUpView {
+
+class FragmentSignUp : ABaseFragment(FragmentSignUpBinding::class.java), ISignUpView {
 
     @Inject
     @InjectPresenter
@@ -34,16 +34,30 @@ class FragmentSignUp : ABaseFragment(R.layout.fragment_sign_up), ISignUpView {
     }
 
     private val binding: FragmentSignUpBinding get() = getViewBinding()
-    private val GALLERY_REQUEST = 1
-    private val REQUEST_TAKE_PHOTO = 1
+    private val picUri: Uri? = null
+    private val imageListener: (soft.eac.appmvptemplate.common.Tools.Image?) -> Unit = { image ->
+        if (image != null) {
+//            binding.ivAvatar.setImageBitmap(image.getBitmap())
+            performCrop()
+            Tools.loadImage(requireContext(),binding.ivAvatar, picUri.toString(),
+                R.drawable.ic_avatar_placeholder
+            )
+//            Glide.with(this)
+//            .load(image.getBitmap())
+//            .placeholder(R.drawable.ic_avatar_placeholder)
+//            .centerCrop()
+//            .into(binding.ivAvatar)
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnSignUp.setOnClickListener {
-            val login = "${etNewLogin.text}"
-            val password = "${etNewPassword.text}"
-            val passwordRepeat = "${etPasswordRepeat.text}"
+        binding.btnSignUp.setOnClickListener {
+            val login = "${binding.etNewLogin.text}"
+            val password = "${binding.etNewPassword.text}"
+            val passwordRepeat = "${binding.etPasswordRepeat.text}"
 
             if (password != passwordRepeat) {
                 toast(R.string.passwords_do_not_match)
@@ -56,54 +70,29 @@ class FragmentSignUp : ABaseFragment(R.layout.fragment_sign_up), ISignUpView {
             presenter.registration(login, password)
         }
 
-        ivAvatar.setOnClickListener{
-            activity?.let {
+        Tools.appContext = App.appContext
+
+        binding.btnLoadAvatar.setOnClickListener {
+            activity?.let { it ->
                 AlertDialog.Builder(it)
                     .setTitle("Загрузить фото")
                     .setMessage("Выберите:")
                     .setPositiveButton("Открыть галерею") { dialog, _ ->
                         dialog.dismiss()
 
-                        val intent = Intent(Intent.ACTION_PICK)
-                        intent.type = "image/*"
-                        startActivityForResult(intent,GALLERY_REQUEST)
+                        openGallery()
                     }
                     .setNegativeButton("Открыть камеру") { dialog, _ ->
                         dialog.dismiss()
 
-                        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        try {
-                            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
-                        } catch (e: ActivityNotFoundException) {
-                            e.printStackTrace()
-                        }
+                        openCamera()
                     }
+                    .create()
+                    .show()
 
             }
-
         }
 
-//        Glide.with(this)
-//            .load(avatar)
-//            .centerCrop()
-//            .into(binding.ivAvatar)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
-            ivAvatar.setImageURI((data.data))
-        }
-        else {
-            toast("Something went wrong")
-        }
-
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
-                ivAvatar.setImageBitmap(data.extras?.get("data") as Bitmap)
-        } else {
-            toast("Something went wrong")
-        }
     }
 
     override fun showError(message: String) {
@@ -114,4 +103,29 @@ class FragmentSignUp : ABaseFragment(R.layout.fragment_sign_up), ISignUpView {
         (activity as? INavigateRouter)?.showSignIn()
     }
 
+    private fun openGallery() {
+        Tools.fromGallery(activity as IPermissionAndResultProvider, imageListener)
+    }
+
+    private fun openCamera() {
+        Tools.fromCamera(activity as IPermissionAndResultProvider, imageListener)
+    }
+
+    private fun performCrop() {
+        try {
+            // Намерение для кадрирования. Не все устройства поддерживают его
+            val cropIntent = Intent("com.android.camera.action.CROP")
+            cropIntent.setDataAndType(picUri, "image/*")
+            cropIntent.putExtra("crop", "true")
+            cropIntent.putExtra("aspectX", 1)
+            cropIntent.putExtra("aspectY", 1)
+            cropIntent.putExtra("outputX", 256)
+            cropIntent.putExtra("outputY", 256)
+            cropIntent.putExtra("return-data", true)
+            startActivityForResult(cropIntent, 2)
+        } catch (a: ActivityNotFoundException) {
+            val errorMessage = "Извините, но ваше устройство не поддерживает кадрирование"
+            toast(errorMessage)
+        }
+    }
 }

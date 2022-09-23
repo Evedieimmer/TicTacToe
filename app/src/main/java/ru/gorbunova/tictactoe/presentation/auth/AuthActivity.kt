@@ -8,9 +8,9 @@ import ru.gorbunova.tictactoe.presentation.auth.load.FragmentLoad
 import ru.gorbunova.tictactoe.presentation.auth.signIn.FragmentSignIn
 import ru.gorbunova.tictactoe.presentation.auth.signUp.FragmentSignUp
 import ru.gorbunova.tictactoe.presentation.main.GameActivity
-import soft.eac.appmvptemplate.views.ABaseActivity
+import soft.eac.appmvptemplate.views.ARequestActivity
 
-class AuthActivity : ABaseActivity(R.layout.activity_auth, R.id.container), INavigateRouter {
+class AuthActivity : ARequestActivity(R.layout.activity_auth, R.id.container), INavigateRouter {
 
     companion object{
         fun show(){
@@ -39,8 +39,6 @@ class AuthActivity : ABaseActivity(R.layout.activity_auth, R.id.container), INav
 
     override fun goToMenuScreen() {
         GameActivity.show()
-//        val intent = Intent(this, GameActivity::class.java)
-//        startActivity(intent)
     }
 
     override fun showLoad() {
