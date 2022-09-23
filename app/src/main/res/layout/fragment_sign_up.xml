@@ -16,10 +16,34 @@
         app:titleTextAppearance="@style/TextAppearance.AppCompat.Display1"
         app:titleTextColor="@color/button_color" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp">
+
+            <ImageView
+                android:id="@+id/ivAvatar"
+                android:layout_gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/shape"
+                android:src="@drawable/ic_avatar_placeholder"
+                app:tint="@color/white" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/your_avatar" />
+        </LinearLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="83dp"
         app:boxStrokeWidth = "2dp"
         app:boxStrokeColor = "@color/button_color"
@@ -70,11 +94,24 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        android:id="@+id/btnLoadAvatar"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="83dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/load_avatar"
+        android:textColor="@color/button_color"
+        app:backgroundTint="@color/auth_background_color"
+        app:strokeColor="@color/button_color" />
+
+
+    <Button
         android:id="@+id/btnSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="83dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="20dp"
         android:text="@string/sign_up"
         app:backgroundTint="@color/button_color"/>
 

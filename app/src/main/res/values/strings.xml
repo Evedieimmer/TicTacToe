@@ -25,5 +25,7 @@
     <string name="create_server">Создать комнату</string>
     <string name="connect">Подключиться к комнате</string>
     <string name="enter_ip">Введите IP</string>
+    <string name="load_avatar">Загрузить аватар</string>
+    <string name="your_avatar">Ваш аватар</string>
 
 </resources>
