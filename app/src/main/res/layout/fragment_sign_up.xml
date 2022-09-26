@@ -23,15 +23,23 @@
             android:layout_marginTop="20dp"
             android:layout_gravity="center">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivAvatar"
                 android:layout_gravity="center"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/shape"
+                app:shapeAppearanceOverlay="@drawable/shape"
                 android:src="@drawable/ic_avatar_placeholder"
-                app:tint="@color/white"
                 android:scaleType="fitXY"/>
+
+<!--            <ImageView-->
+<!--                android:id="@+id/ivAvatar"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="150dp"-->
+<!--                android:src="@drawable/ic_avatar_placeholder"-->
+<!--                />-->
+
 
             <TextView
                 android:layout_gravity="center"

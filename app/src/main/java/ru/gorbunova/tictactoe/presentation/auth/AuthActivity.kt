@@ -1,5 +1,6 @@
 package ru.gorbunova.tictactoe.presentation.auth
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import ru.gorbunova.tictactoe.App
@@ -27,6 +28,9 @@ class AuthActivity : ARequestActivity(R.layout.activity_auth, R.id.container), I
         if (savedInstanceState != null)
             return
          showLoad()
+        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            println(it)
+        }
     }
 
     override fun showSignUp() {
