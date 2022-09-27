@@ -1,5 +1,7 @@
 package ru.gorbunova.tictactoe.domain.repositories.models.rest.api
 
+
+import android.net.Uri
 import ru.gorbunova.tictactoe.domain.di.module.NetModule
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.GameScore
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
@@ -49,4 +51,5 @@ class UserRestApi : ABaseRestApi<IUserRestApiService> {
         gameTag: Int
     ) = api.getGameResultTable(accessToken, gameTag)
 
+    fun uploadAvatar(uriAvatar: Uri, accessToken: String) = api.uploadAvatar(accessToken, uriAvatar)
 }

@@ -1,5 +1,6 @@
 package ru.gorbunova.tictactoe.domain.repositories
 
+import android.net.Uri
 import android.os.SystemClock
 
 import ru.gorbunova.tictactoe.domain.repositories.local.UserStorage
@@ -7,6 +8,8 @@ import ru.gorbunova.tictactoe.domain.repositories.models.rest.Response
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.api.UserRestApi
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.service.UploadedFile
+import soft.eac.appmvptemplate.common.Photo
 import soft.eac.appmvptemplate.common.rx.SubRX
 import soft.eac.appmvptemplate.common.rx.standardIO
 import java.net.HttpURLConnection
@@ -34,6 +37,14 @@ class UserRepository {
         rest.registration(login, pass).doOnNext {
             storage.save(it, login, pass)
         }.doOnError { }.standardIO(observer)
+    }
+
+    fun uploadAvatar(observer: SubRX<UploadedFile>, uriAvatar: Uri) {
+        getToken()?.access?.let { access ->
+            rest.uploadAvatar(uriAvatar, access).doOnNext {
+                storage.save(it)
+            }.standardIO(observer)
+        }
     }
 
     fun refreshToken(

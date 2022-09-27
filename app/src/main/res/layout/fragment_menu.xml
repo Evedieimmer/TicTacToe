@@ -38,8 +38,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@drawable/shape"
-                android:src="@drawable/ic_avatar_placeholder"
-                app:tint="@color/white" />
+                android:src="@drawable/ic_avatar_placeholder" />
             <TextView
                 android:layout_gravity="center"
                 android:id="@+id/userName"
@@ -66,7 +65,8 @@
                 app:backgroundTint="@color/button_color"
                 app:icon="@drawable/ic_settings"
                 app:iconSize="30dp"
-                app:iconTint="@color/white" />
+                app:iconTint="@color/white"
+                android:scaleType="fitXY"/>
         </LinearLayout>
     </LinearLayout>
 

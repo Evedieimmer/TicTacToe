@@ -2,9 +2,11 @@ package ru.gorbunova.tictactoe.domain.repositories.local
 
 import io.realm.Realm
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.TokenRealm
+import ru.gorbunova.tictactoe.domain.repositories.models.realm.UploadedFileRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.UserRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.service.UploadedFile
 import ru.gorbunova.tictactoe.domain.repositories.models.toBase
 import ru.gorbunova.tictactoe.domain.repositories.models.toRealm
 import javax.inject.Inject
@@ -12,6 +14,7 @@ import javax.inject.Inject
 class UserStorage {
     private var user: User? = null
     private var token: Token? = null
+    private var uploadedFile: UploadedFile? = null
 
     @Inject
     constructor()
@@ -44,10 +47,28 @@ class UserStorage {
         }
     }
 
+    fun save(_uploadedFile: UploadedFile) {
+        this.uploadedFile = _uploadedFile
+
+        Realm.getDefaultInstance().use {
+            it.executeTransaction {
+                it.insertOrUpdate(uploadedFile.toRealm())
+            }
+        }
+    }
+
     fun getUser(): User? {
         Realm.getDefaultInstance().use {
             return it.where(UserRealm::class.java).findFirst()?.toBase().apply {
                 user = this
+            }
+        }
+    }
+
+    fun getUploadedFile(): UploadedFile? {
+        Realm.getDefaultInstance().use {
+            return  it.where(UploadedFileRealm::class.java).findFirst()?.toBase().apply {
+                uploadedFile = this
             }
         }
     }

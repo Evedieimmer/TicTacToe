@@ -2,10 +2,14 @@ package ru.gorbunova.tictactoe.domain.repositories.models.rest.service
 
 
 
+import android.graphics.Bitmap
+import android.net.Uri
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Call
 import retrofit2.http.*
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.*
+import soft.eac.appmvptemplate.common.Photo
+import java.io.File
 
 
 interface IUserRestApiService {
@@ -37,7 +41,12 @@ interface IUserRestApiService {
     ): Observable<UserUpdate>
 
     //Загрузить файл для аватара пользователя (не более 256кб)
-
+    @Multipart
+    @POST("/upload/v1/avatar")
+    fun uploadAvatar(
+        @Header("access_token") accessToken: String,
+        @Part("file") uriAvatar: Uri
+    ): Observable<UploadedFile>
 
     //Сохранить результат игры, если он лучше предыдущего
     @POST("/game/v1/result")
