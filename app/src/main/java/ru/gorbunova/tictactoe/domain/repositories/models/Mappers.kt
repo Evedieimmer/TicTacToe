@@ -36,7 +36,7 @@ fun User?.toRealm(): UserRealm? {
 
 fun UserRealm?.toBase(): User?{
     this ?: return null
-    return User(login ?: "", password ?: "", id, avatarUrl, token.toBase())
+    return User(login ?: "", password ?: "", avatarUrl, id,  token.toBase())
 }
 
 fun UploadedFile?.toRealm(): UploadedFileRealm? {

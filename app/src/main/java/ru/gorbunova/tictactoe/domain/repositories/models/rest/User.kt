@@ -7,9 +7,10 @@ data class User(
     var login: String = "",
     var password: String = "",
 
-    val id: Int = 0,
     @SerializedName("avatar_url")
-    val avatarUrl: String? = null,
+    var avatarUrl: String? = null,
+
+    val id: Int = 0,
     var token: Token? = null
 )
 

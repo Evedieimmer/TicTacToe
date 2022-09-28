@@ -3,6 +3,8 @@ package ru.gorbunova.tictactoe.presentation.auth.signUp
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -41,10 +43,7 @@ class FragmentSignUp : ABaseFragment(FragmentSignUpBinding::class.java), ISignUp
         if (image != null) {
 
             picUri = image.asLocal()
-
-//            binding.ivAvatar.setImageBitmap(image.getBitmap())
-//            binding.ivAvatar.setImageBitmap(BitmapFactory.decodeByteArray(image.bytes, 0, image.bytes!!.size))
-//            binding.ivAvatar.setImageURI(picUri)
+            println(picUri)
 
             Tools.loadCircleImage(
                 requireContext(),
@@ -52,6 +51,8 @@ class FragmentSignUp : ABaseFragment(FragmentSignUpBinding::class.java), ISignUp
                 picUri.toString(),
                 R.drawable.ic_avatar_placeholder
             )
+
+//            picUri?.let { presenter.uploadAvatar(it) }
 
 //            Images.load("$picUri") {
 //                it?.also {

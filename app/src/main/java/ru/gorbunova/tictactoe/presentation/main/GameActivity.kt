@@ -15,9 +15,10 @@ import ru.gorbunova.tictactoe.presentation.main.game.FragmentNetworkGame
 import ru.gorbunova.tictactoe.presentation.main.menu.FragmentMenu
 import ru.gorbunova.tictactoe.presentation.main.records.FragmentRecordsTable
 import soft.eac.appmvptemplate.views.ABaseActivity
+import soft.eac.appmvptemplate.views.ARequestActivity
 import javax.inject.Inject
 
-class GameActivity : ABaseActivity(R.layout.activity_game, R.id.container), INavigateRouterMain {
+class GameActivity : ARequestActivity(R.layout.activity_game, R.id.container), INavigateRouterMain {
 
     companion object {
         fun show() {

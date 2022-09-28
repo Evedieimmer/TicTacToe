@@ -5,6 +5,7 @@ package ru.gorbunova.tictactoe.domain.repositories.models.rest.service
 import android.graphics.Bitmap
 import android.net.Uri
 import io.reactivex.rxjava3.core.Observable
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.*
@@ -31,12 +32,11 @@ interface IUserRestApiService {
 
     //Разавторизовать текущего пользователя
     @DELETE("user/v1/logout")
-    fun logOut(@Header("access_token") accessToken: String): Observable<Response>
+    fun logOut(): Observable<Response>
 
     //Обновление данных пользователя: установка аватара и смена пароля
     @POST("user/v1/update")
     fun updateUser(
-        @Header("access_token") accessToken: String,
         @Body userUpdate: UserUpdate
     ): Observable<UserUpdate>
 
@@ -44,21 +44,18 @@ interface IUserRestApiService {
     @Multipart
     @POST("/upload/v1/avatar")
     fun uploadAvatar(
-        @Header("access_token") accessToken: String,
-        @Part("file") uriAvatar: Uri
+        @Part avatar: MultipartBody.Part
     ): Observable<UploadedFile>
 
     //Сохранить результат игры, если он лучше предыдущего
     @POST("/game/v1/result")
     fun saveGameResult(
-        @Header("access_token") accessToken: String,
         @Body gameScore: GameScore
     ): Call<Response>
 
     //Получить таблицу рекордов
     @GET("/game/v1/results/{game_tag}")
     fun getGameResultTable(
-        @Header("access_token") accessToken: String,
         @Path("game_tag") gameTag: Int
     ): Observable<List<GameResult>>
 }

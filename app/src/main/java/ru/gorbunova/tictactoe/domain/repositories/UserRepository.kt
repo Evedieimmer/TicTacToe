@@ -2,6 +2,7 @@ package ru.gorbunova.tictactoe.domain.repositories
 
 import android.net.Uri
 import android.os.SystemClock
+import okhttp3.MultipartBody
 
 import ru.gorbunova.tictactoe.domain.repositories.local.UserStorage
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Response
@@ -15,15 +16,10 @@ import soft.eac.appmvptemplate.common.rx.standardIO
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
-class UserRepository {
-    private val storage: UserStorage
+class UserRepository @Inject constructor(
+    private val storage: UserStorage,
     private val rest: UserRestApi
-
-    @Inject
-    constructor(storage: UserStorage, rest: UserRestApi) {
-        this.storage = storage
-        this.rest = rest
-    }
+) {
 
     fun login(observer: SubRX<User>, login: String, pass: String) {
 
@@ -39,12 +35,10 @@ class UserRepository {
         }.doOnError { }.standardIO(observer)
     }
 
-    fun uploadAvatar(observer: SubRX<UploadedFile>, uriAvatar: Uri) {
-        getToken()?.access?.let { access ->
-            rest.uploadAvatar(uriAvatar, access).doOnNext {
+    fun uploadAvatar(observer: SubRX<UploadedFile>, avatar: MultipartBody.Part) {
+            rest.uploadAvatar(avatar).doOnNext {
                 storage.save(it)
             }.standardIO(observer)
-        }
     }
 
     fun refreshToken(
@@ -70,14 +64,14 @@ class UserRepository {
     fun hasToken() = storage.getToken() != null
 
     fun logOut(observer: SubRX<Response>) {
-        getToken()?.access?.let {
-            rest.logOut(it).doOnNext { response ->
+            rest.logOut().doOnNext { response ->
                 if (response.success)
                     storage.clearUserData()
             }.doOnError {  }.standardIO(observer)
-        }
     }
 
     fun getUser() = storage.getUser()
+
+    fun getUploadedFile() = storage.getUploadedFile()
 
 }

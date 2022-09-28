@@ -3,9 +3,12 @@ package ru.gorbunova.tictactoe.presentation.auth.signUp
 
 import android.net.Uri
 import moxy.InjectViewState
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
 import soft.eac.appmvptemplate.common.rx.SubRX
 import soft.eac.appmvptemplate.tools.ABasePresenter
+import java.io.File
 import javax.inject.Inject
 
 @InjectViewState
@@ -25,22 +28,23 @@ class SignUpPresenter @Inject constructor(
     }
 
 
-    fun uploadAvatar(uriAvatar: Uri) {
-        val accessToken = userRepository.getToken()?.access ?: ""
-        if(accessToken != "")
-            userRepository.uploadAvatar(SubRX {_, e ->
-                if(e != null) {
-                    e.printStackTrace()
-                    viewState.showError(e.localizedMessage ?: "error")
-                    return@SubRX
-                }
-            }, uriAvatar)
+    fun uploadAvatar(imagePath: String) {
+
+        val file = File(imagePath)
+
+        val body = MultipartBody.Part.createFormData("image", file.name, file.asRequestBody())
+        userRepository.uploadAvatar(SubRX {_, e ->
+            if(e != null) {
+                e.printStackTrace()
+                viewState.showError(e.localizedMessage ?: "error")
+                return@SubRX
+            }
+        }, body)
     }
 
-    fun addUserAvatar() {
-
+    fun getAvatarUrl(): String {
+        return userRepository.getUploadedFile()?.path ?: ""
     }
-
 }
 
 //загрузка фото:

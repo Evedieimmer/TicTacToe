@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".FragmentMenu"
     android:orientation="vertical"
     android:background="@color/game_background_color">
 
@@ -34,6 +33,7 @@
             android:layout_marginStart="20dp">
 
             <ImageView
+                android:id="@+id/ivAvatar"
                 android:layout_gravity="center"
                 android:layout_width="60dp"
                 android:layout_height="60dp"

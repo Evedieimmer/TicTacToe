@@ -7,4 +7,5 @@ import moxy.viewstate.strategy.StateStrategyType
 @StateStrategyType(SkipStrategy::class)
 interface IMenuView : MvpView {
     fun goToAuthScreen()
+    fun showError(message: String)
 }

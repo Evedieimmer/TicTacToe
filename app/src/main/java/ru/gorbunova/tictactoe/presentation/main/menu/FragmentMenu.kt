@@ -1,18 +1,25 @@
 package ru.gorbunova.tictactoe.presentation.main.menu
 
+import android.app.AlertDialog
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.fragment_menu.*
+import android.widget.Toast
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
+import ru.gorbunova.tictactoe.App
 import ru.gorbunova.tictactoe.R
+import ru.gorbunova.tictactoe.databinding.FragmentMenuBinding
 import ru.gorbunova.tictactoe.domain.di.component.DaggerAppComponent
 import ru.gorbunova.tictactoe.presentation.main.INavigateRouterMain
+import soft.eac.appmvptemplate.common.IPermissionAndResultProvider
+import soft.eac.appmvptemplate.common.Photo
+import soft.eac.appmvptemplate.common.Tools
 import soft.eac.appmvptemplate.views.ABaseFragment
 import javax.inject.Inject
 
 
-class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
+class FragmentMenu : ABaseFragment(FragmentMenuBinding::class.java), IMenuView {
 
     @Inject
     @InjectPresenter
@@ -27,63 +34,104 @@ class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
         DaggerAppComponent.create().inject(this)
     }
 
-//     fun getViewId() = R.layout.fragment_menu
+    private val binding: FragmentMenuBinding get() = getViewBinding()
+    private var picUri: Uri? = null
+    private val imageListener: (Photo.Image?) -> Unit = { image ->
+        if (image != null) {
+
+            picUri = image.asLocal()
+            println(picUri)
+
+            Tools.loadCircleImage(
+                requireContext(),
+                binding.ivAvatar,
+                picUri.toString(),
+                R.drawable.ic_avatar_placeholder
+            )
+
+            image.path?.let { presenter.uploadAvatar(it) }
+            val avatarUrl = presenter.getAvatarUrl()
+            println(avatarUrl)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Photo.appContext = App.appContext
         val name = presenter.getUserName()
-        userName.text = "$name"
+        binding.userName.text = "$name"
 
-        btnOnline.setOnClickListener {
+        binding.ivAvatar.setOnClickListener {
+            activity?.let { it ->
+                AlertDialog.Builder(it)
+                    .setTitle("Загрузить фото")
+                    .setMessage("Выберите:")
+                    .setPositiveButton("Открыть галерею") { dialog, _ ->
+                        dialog.dismiss()
+
+                        openGallery()
+                    }
+                    .setNegativeButton("Открыть камеру") { dialog, _ ->
+                        dialog.dismiss()
+
+                        openCamera()
+                    }
+                    .create()
+                    .show()
+
+            }
+        }
+
+        binding.btnOnline.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
                     it.showNetworkGame()
             }
         }
 
-        btnOnlineBot.setOnClickListener {
+        binding.btnOnlineBot.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
                     it.showNetworkGameForBot()
             }
         }
 
-        btnWithFriend.setOnClickListener {
+        binding.btnWithFriend.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
                     it.showLocalGame()
             }
         }
 
-        btnWithBot.setOnClickListener {
+        binding.btnWithBot.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
                     it.showBotGame()
             }
         }
 
-        btnRating.setOnClickListener {
+        binding.btnRating.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
                     it.showRecords()
             }
         }
 
-        btnQuitTheGame.setOnClickListener {
+        binding.btnQuitTheGame.setOnClickListener {
             activity?.let{
                 presenter.logOut()
             }
         }
 
-        btnConnectToGame.setOnClickListener {
+        binding.btnConnectToGame.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
                     it.showGameWithHost()
             }
         }
 
-        btnCreateLocalServerGame.setOnClickListener {
+        binding.btnCreateLocalServerGame.setOnClickListener {
             activity?.let {
                 if (it is INavigateRouterMain)
                     it.showHostGame()
@@ -93,5 +141,17 @@ class FragmentMenu : ABaseFragment(R.layout.fragment_menu), IMenuView {
 
     override fun goToAuthScreen() {
         (activity as? INavigateRouterMain)?.goToAuthScreen()
+    }
+
+    private fun openGallery() {
+        Photo.fromGallery(activity as IPermissionAndResultProvider, imageListener)
+    }
+
+    private fun openCamera() {
+        Photo.fromCamera(activity as IPermissionAndResultProvider, imageListener)
+    }
+
+    override fun showError(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
