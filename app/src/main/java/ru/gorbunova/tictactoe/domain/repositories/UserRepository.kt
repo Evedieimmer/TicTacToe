@@ -36,9 +36,11 @@ class UserRepository @Inject constructor(
     }
 
     fun uploadAvatar(observer: SubRX<UploadedFile>, avatar: MultipartBody.Part) {
-            rest.uploadAvatar(avatar).doOnNext {
-                storage.save(it)
-            }.standardIO(observer)
+      getToken()?.access?.let { access ->
+          rest.uploadAvatar(avatar, access).doOnNext {
+              storage.save(it)
+          }.standardIO(observer)
+      }
     }
 
     fun refreshToken(
@@ -64,10 +66,12 @@ class UserRepository @Inject constructor(
     fun hasToken() = storage.getToken() != null
 
     fun logOut(observer: SubRX<Response>) {
-            rest.logOut().doOnNext { response ->
+        getToken()?.access?.let {
+            rest.logOut(it).doOnNext { response ->
                 if (response.success)
                     storage.clearUserData()
             }.doOnError {  }.standardIO(observer)
+        }
     }
 
     fun getUser() = storage.getUser()

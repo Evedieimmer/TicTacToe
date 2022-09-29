@@ -47,12 +47,11 @@ class UserStorage {
         }
     }
 
-    fun save(_uploadedFile: UploadedFile) {
-        this.uploadedFile = _uploadedFile
-
+    fun save(uploadedFile: UploadedFile) {
+        user?.avatarUrl = uploadedFile.path
         Realm.getDefaultInstance().use {
             it.executeTransaction {
-                it.insertOrUpdate(uploadedFile.toRealm())
+                it.insertOrUpdate(user.toRealm())
             }
         }
     }

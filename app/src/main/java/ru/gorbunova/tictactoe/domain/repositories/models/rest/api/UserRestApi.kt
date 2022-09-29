@@ -1,7 +1,5 @@
 package ru.gorbunova.tictactoe.domain.repositories.models.rest.api
 
-
-import android.net.Uri
 import okhttp3.MultipartBody
 import ru.gorbunova.tictactoe.domain.di.module.NetModule
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.GameScore
@@ -29,7 +27,7 @@ class UserRestApi : ABaseRestApi<IUserRestApiService> {
 
     fun refreshToken(refreshToken: String) = api.refreshToken(refreshToken)
 
-    fun logOut() = api.logOut()
+    fun logOut(accessToken: String) = api.logOut(accessToken)
 
     fun updateUser(
         newPassword: String,
@@ -49,5 +47,5 @@ class UserRestApi : ABaseRestApi<IUserRestApiService> {
         gameTag: Int
     ) = api.getGameResultTable(gameTag)
 
-    fun uploadAvatar(avatar: MultipartBody.Part) = api.uploadAvatar(avatar)
+    fun uploadAvatar(avatar: MultipartBody.Part, accessToken: String) = api.uploadAvatar(accessToken, avatar)
 }

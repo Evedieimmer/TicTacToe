@@ -50,8 +50,10 @@ class FragmentMenu : ABaseFragment(FragmentMenuBinding::class.java), IMenuView {
             )
 
             image.path?.let { presenter.uploadAvatar(it) }
-            val avatarUrl = presenter.getAvatarUrl()
-            println(avatarUrl)
+
+//            val avatarUrl = presenter.getAvatarUrl()
+//            println(avatarUrl)
+
         }
     }
 
@@ -61,6 +63,15 @@ class FragmentMenu : ABaseFragment(FragmentMenuBinding::class.java), IMenuView {
         Photo.appContext = App.appContext
         val name = presenter.getUserName()
         binding.userName.text = "$name"
+
+        val avatarUrl = presenter.getAvatarUrl()
+        if(avatarUrl != "")
+            println(avatarUrl)
+            Tools.loadCircleImage(
+                requireContext(),
+                binding.ivAvatar,
+                "http://10.102.100.91:8080$avatarUrl"
+            )
 
         binding.ivAvatar.setOnClickListener {
             activity?.let { it ->

@@ -1,17 +1,10 @@
 package ru.gorbunova.tictactoe.domain.repositories.models.rest.service
 
-
-
-import android.graphics.Bitmap
-import android.net.Uri
 import io.reactivex.rxjava3.core.Observable
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.*
-import soft.eac.appmvptemplate.common.Photo
-import java.io.File
-
 
 interface IUserRestApiService {
 
@@ -32,7 +25,7 @@ interface IUserRestApiService {
 
     //Разавторизовать текущего пользователя
     @DELETE("user/v1/logout")
-    fun logOut(): Observable<Response>
+    fun logOut(@Header("access_token") accessToken: String): Observable<Response>
 
     //Обновление данных пользователя: установка аватара и смена пароля
     @POST("user/v1/update")
@@ -44,6 +37,7 @@ interface IUserRestApiService {
     @Multipart
     @POST("/upload/v1/avatar")
     fun uploadAvatar(
+        @Header ("access_token") accessToken: String,
         @Part avatar: MultipartBody.Part
     ): Observable<UploadedFile>
 
