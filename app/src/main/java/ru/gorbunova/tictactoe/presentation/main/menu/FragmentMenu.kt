@@ -35,25 +35,18 @@ class FragmentMenu : ABaseFragment(FragmentMenuBinding::class.java), IMenuView {
     }
 
     private val binding: FragmentMenuBinding get() = getViewBinding()
-    private var picUri: Uri? = null
     private val imageListener: (Photo.Image?) -> Unit = { image ->
         if (image != null) {
-
-            picUri = image.asLocal()
-            println(picUri)
-
-            Tools.loadCircleImage(
-                requireContext(),
-                binding.ivAvatar,
-                picUri.toString(),
-                R.drawable.ic_avatar_placeholder
-            )
-
+//            Tools.loadCircleImage(
+//                requireContext(),
+//                binding.ivAvatar,
+//                picUri.toString(),
+//                R.drawable.ic_avatar_placeholder
+//            )
             image.path?.let { presenter.uploadAvatar(it) }
-
-//            val avatarUrl = presenter.getAvatarUrl()
-//            println(avatarUrl)
-
+//            val urlAvatar = presenter.getAvatarUrl()
+//            presenter.updateUserAvatar(urlAvatar)
+            loadAvatar()
         }
     }
 
@@ -61,17 +54,9 @@ class FragmentMenu : ABaseFragment(FragmentMenuBinding::class.java), IMenuView {
         super.onViewCreated(view, savedInstanceState)
 
         Photo.appContext = App.appContext
-        val name = presenter.getUserName()
+        val name = presenter.getUser().login
         binding.userName.text = "$name"
-
-        val avatarUrl = presenter.getAvatarUrl()
-        if(avatarUrl != "")
-            println(avatarUrl)
-            Tools.loadCircleImage(
-                requireContext(),
-                binding.ivAvatar,
-                "http://10.102.100.91:8080$avatarUrl"
-            )
+        loadAvatar()
 
         binding.ivAvatar.setOnClickListener {
             activity?.let { it ->
@@ -164,5 +149,15 @@ class FragmentMenu : ABaseFragment(FragmentMenuBinding::class.java), IMenuView {
 
     override fun showError(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun loadAvatar() {
+        val avatarUrl = presenter.getUser().avatarUrl ?: ""
+        if(avatarUrl != "")
+        Tools.loadCircleImage(
+            requireContext(),
+            binding.ivAvatar,
+            "http://10.102.100.91:8080$avatarUrl"
+        )
     }
 }

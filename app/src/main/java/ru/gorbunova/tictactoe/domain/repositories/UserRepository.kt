@@ -1,6 +1,5 @@
 package ru.gorbunova.tictactoe.domain.repositories
 
-import android.net.Uri
 import android.os.SystemClock
 import okhttp3.MultipartBody
 
@@ -8,6 +7,7 @@ import ru.gorbunova.tictactoe.domain.repositories.local.UserStorage
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Response
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.UserUpdate
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.api.UserRestApi
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.service.UploadedFile
 import soft.eac.appmvptemplate.common.Photo
@@ -22,7 +22,6 @@ class UserRepository @Inject constructor(
 ) {
 
     fun login(observer: SubRX<User>, login: String, pass: String) {
-
         rest.login(login, pass).doOnNext {
             storage.save(it, login, pass)
         }.standardIO(observer)
@@ -41,6 +40,14 @@ class UserRepository @Inject constructor(
               storage.save(it)
           }.standardIO(observer)
       }
+    }
+
+    fun updateUser(observer: SubRX<UserUpdate>, newAvatarUrl: String) {
+        getToken()?.access?.let { access ->
+            rest.updateUser(access, newAvatarUrl).doOnNext {
+                storage.update(it)
+            }.standardIO(observer)
+        }
     }
 
     fun refreshToken(
@@ -77,5 +84,4 @@ class UserRepository @Inject constructor(
     fun getUser() = storage.getUser()
 
     fun getUploadedFile() = storage.getUploadedFile()
-
 }

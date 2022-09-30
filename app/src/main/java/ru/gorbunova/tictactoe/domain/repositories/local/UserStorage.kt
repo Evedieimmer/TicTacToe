@@ -6,6 +6,7 @@ import ru.gorbunova.tictactoe.domain.repositories.models.realm.UploadedFileRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.UserRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.UserUpdate
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.service.UploadedFile
 import ru.gorbunova.tictactoe.domain.repositories.models.toBase
 import ru.gorbunova.tictactoe.domain.repositories.models.toRealm
@@ -16,13 +17,14 @@ class UserStorage {
     private var token: Token? = null
     private var uploadedFile: UploadedFile? = null
 
+
     @Inject
     constructor()
 
     fun save(_user: User, login: String, pass: String) {
         _user.login = login
         this.user = _user
-        if (_user.token != null){
+        if (_user.token != null) {
             val user = this.user ?: return
             user.login = _user.login
             user.password = pass
@@ -53,6 +55,16 @@ class UserStorage {
             it.executeTransaction {
                 it.insertOrUpdate(user.toRealm())
             }
+        }
+    }
+
+    fun update(userUpdate: UserUpdate) {
+        user?.password = userUpdate.newPassword
+        user?.avatarUrl = userUpdate.newAvatarUrl
+        Realm.getDefaultInstance().use {
+            it.executeTransaction {
+                it.insertOrUpdate(user.toRealm())
+             }
         }
     }
 

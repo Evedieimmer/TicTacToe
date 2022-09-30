@@ -30,12 +30,13 @@ class UserRestApi : ABaseRestApi<IUserRestApiService> {
     fun logOut(accessToken: String) = api.logOut(accessToken)
 
     fun updateUser(
-        newPassword: String,
-        oldPassword: String,
-        passwordSuccess: String
-    ) = api.updateUser(
-        UserUpdate(newPassword, oldPassword, passwordSuccess)
-    )
+        accessToken: String,
+//        newPassword: String,
+//        oldPassword: String,
+        newAvatarUrl: String
+    ) = api.updateUserAvatar(accessToken, UserUpdate(newAvatarUrl))
+
+
 
     fun saveGameResult(
         gameScore: GameScore
@@ -47,5 +48,6 @@ class UserRestApi : ABaseRestApi<IUserRestApiService> {
         gameTag: Int
     ) = api.getGameResultTable(gameTag)
 
-    fun uploadAvatar(avatar: MultipartBody.Part, accessToken: String) = api.uploadAvatar(accessToken, avatar)
+    fun uploadAvatar(avatar: MultipartBody.Part, accessToken: String) =
+        api.uploadAvatar(accessToken, avatar)
 }

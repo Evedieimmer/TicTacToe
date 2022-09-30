@@ -29,7 +29,8 @@ interface IUserRestApiService {
 
     //Обновление данных пользователя: установка аватара и смена пароля
     @POST("user/v1/update")
-    fun updateUser(
+    fun updateUserAvatar(
+        @Header ("access_token") accessToken: String,
         @Body userUpdate: UserUpdate
     ): Observable<UserUpdate>
 

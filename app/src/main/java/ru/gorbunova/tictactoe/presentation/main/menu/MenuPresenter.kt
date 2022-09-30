@@ -9,6 +9,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.gorbunova.tictactoe.domain.repositories.UserRepository
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import soft.eac.appmvptemplate.common.rx.SubRX
 import soft.eac.appmvptemplate.tools.ABasePresenter
 import java.io.File
@@ -33,9 +34,8 @@ class MenuPresenter : ABasePresenter<IMenuView> {
         })
     }
 
-    fun getUserName(): String {
-        val user = userRepository.getUser() ?: throw IllegalStateException("User not find")
-        return user.login
+    fun getUser(): User {
+        return userRepository.getUser() ?: throw IllegalStateException("User not find")
     }
 
     fun uploadAvatar(imagePath: String) {
@@ -50,9 +50,22 @@ class MenuPresenter : ABasePresenter<IMenuView> {
                     return@SubRX
                 }
             }, body)
+        updateUserAvatar(getAvatarUrl())
     }
 
     fun getAvatarUrl(): String {
         return userRepository.getUploadedFile()?.path ?: ""
+    }
+
+    fun updateUserAvatar( newAvatarUrl: String? = "") {
+        if (newAvatarUrl != null) {
+            userRepository.updateUser(SubRX {_, e ->
+                if(e != null) {
+                    e.printStackTrace()
+                    viewState.showError(e.localizedMessage ?: "error")
+                    return@SubRX
+                }
+            }, newAvatarUrl)
+        }
     }
 }
