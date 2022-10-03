@@ -7,7 +7,7 @@ import ru.gorbunova.tictactoe.domain.repositories.models.realm.UserRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.UserUpdate
-import ru.gorbunova.tictactoe.domain.repositories.models.rest.service.UploadedFile
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.UploadedFile
 import ru.gorbunova.tictactoe.domain.repositories.models.toBase
 import ru.gorbunova.tictactoe.domain.repositories.models.toRealm
 import javax.inject.Inject

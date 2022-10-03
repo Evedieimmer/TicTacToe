@@ -41,24 +41,14 @@ class FragmentSignUp : ABaseFragment(FragmentSignUpBinding::class.java), ISignUp
     private var picUri: Uri? = null
     private val imageListener: (Photo.Image?) -> Unit = { image ->
         if (image != null) {
-
-            picUri = image.asLocal()
-            println(picUri)
-
-            Tools.loadCircleImage(
-                requireContext(),
-                binding.ivAvatar,
-                picUri.toString(),
-                R.drawable.ic_avatar_placeholder
-            )
-
-//            picUri?.let { presenter.uploadAvatar(it) }
-
-//            Images.load("$picUri") {
-//                it?.also {
-//                    binding.ivAvatar.setImageBitmap(it)
-//                }
-//            }
+            image.path?.let { presenter.uploadAvatar(it) }
+            loadAvatar()
+//            Tools.loadCircleImage(
+//                requireContext(),
+//                binding.ivAvatar,
+//                picUri.toString(),
+//                R.drawable.ic_avatar_placeholder
+//            )
         }
     }
 
@@ -83,6 +73,9 @@ class FragmentSignUp : ABaseFragment(FragmentSignUpBinding::class.java), ISignUp
         }
 
         Photo.appContext = App.appContext
+        val name = presenter.getUser().login
+        binding.userName.text = "$name"
+        loadAvatar()
 
         binding.btnLoadAvatar.setOnClickListener {
             activity?.let { it ->
@@ -121,5 +114,15 @@ class FragmentSignUp : ABaseFragment(FragmentSignUpBinding::class.java), ISignUp
 
     private fun openCamera() {
         Photo.fromCamera(activity as IPermissionAndResultProvider, imageListener)
+    }
+
+    private fun loadAvatar() {
+        val avatarUrl = presenter.getUser().avatarUrl ?: ""
+        if(avatarUrl != "")
+            Tools.loadCircleImage(
+                requireContext(),
+                binding.ivAvatar,
+                "http://10.102.100.91:8080$avatarUrl"
+            )
     }
 }

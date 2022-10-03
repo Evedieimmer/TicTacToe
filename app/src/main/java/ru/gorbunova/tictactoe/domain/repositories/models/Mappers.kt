@@ -5,7 +5,7 @@ import ru.gorbunova.tictactoe.domain.repositories.models.realm.UploadedFileRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.realm.UserRealm
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.Token
 import ru.gorbunova.tictactoe.domain.repositories.models.rest.User
-import ru.gorbunova.tictactoe.domain.repositories.models.rest.service.UploadedFile
+import ru.gorbunova.tictactoe.domain.repositories.models.rest.UploadedFile
 
 fun Token?.toRealm(): TokenRealm? {
     this ?: return null
